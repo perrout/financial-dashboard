@@ -19,6 +19,7 @@ import {
 } from "../mocks";
 import { calculateDailySummary } from "../utils";
 
+import { useAppStore } from "../store/app-store";
 import { formatCurrency } from "../utils";
 
 ChartJS.register(
@@ -43,6 +44,8 @@ export default function TransactionChart({
   height = 300,
   className = "",
 }: TransactionChartProps) {
+  const { selectedCountry } = useAppStore();
+
   const dailySummary = calculateDailySummary(MOCK_TRANSACTIONS);
   const loading = MOCK_LOADING;
   const error = MOCK_ERROR;

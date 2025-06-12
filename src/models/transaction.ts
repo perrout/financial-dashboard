@@ -24,22 +24,8 @@ export interface CurrencyBalance {
 }
 
 export interface DailyTransactionSummary {
-  date: string
-  totalAmount: number
-  transactionCount: number
-  currency: Currency
-}
-
-export interface FormData {
-  description: string;
-  amount: string;
-  currency: string;
   date: string;
-}
-
-export interface FormErrors {
-  amount?: string;
-  currency?: string;
-  date?: string;
-  general?: string;
+  totalAmount: number;
+  transactionCount: number;
+  currency: Currency;
 }

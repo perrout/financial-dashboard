@@ -1,6 +1,5 @@
-import { MOCK_LANGUAGES, type SupportedLanguage } from "@/mocks";
-import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
+import { type SupportedLanguage, useAppStore } from "../store/app-store";
 
 interface LanguageSelectorProps {
   variant?: "primary" | "outline-primary" | "light" | "link";
@@ -15,14 +14,21 @@ export default function LanguageSelector({
   showText = false,
   className = "",
 }: LanguageSelectorProps) {
-  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>(
-    MOCK_LANGUAGES[0],
-  );
+  const {
+      selectedLanguage,
+      setSelectedLanguage,
+      getSupportedLanguages
+  } = useAppStore()
 
-  const handleLanguageChange = (language: SupportedLanguage) => {
-    console.log("language", language);
-    setSelectedLanguage(language);
-  };
+  const supportedLanguages = getSupportedLanguages()
+  const currentLanguage = supportedLanguages.find(
+      lang => lang.code === selectedLanguage
+  ) || supportedLanguages[0]
+
+  const handleLanguageChange = async (languageCode: SupportedLanguage) => {
+    console.log("languageCode", languageCode);
+    setSelectedLanguage(languageCode)
+  }
 
   return (
     <Dropdown className={className}>
@@ -40,25 +46,25 @@ export default function LanguageSelector({
           }),
         }}
       >
-        <span style={{ fontSize: "1.1em" }}>{selectedLanguage.flag}</span>
+        <span style={{ fontSize: "1.1em" }}>{currentLanguage.flag}</span>
         {showText && (
-          <span className="text-capitalize">{selectedLanguage.nativeName}</span>
+          <span className="text-capitalize">{currentLanguage.nativeName}</span>
         )}
       </Dropdown.Toggle>
       <Dropdown.Menu align="end">
-        {MOCK_LANGUAGES.map((language: SupportedLanguage) => (
-          <Dropdown.Item
-            key={language.code}
-            active={selectedLanguage.code === language.code}
-            onClick={() => handleLanguageChange(language)}
-            className="d-flex align-items-center gap-2"
-          >
-            <span style={{ fontSize: "1.1em" }}>{language.flag}</span>
-            <div>
-              <div className="fw-bold">{language.nativeName}</div>
-              <small className="text-muted">{language.name}</small>
-            </div>
-          </Dropdown.Item>
+        {supportedLanguages.map((language) => (
+            <Dropdown.Item
+                key={language.code}
+                active={selectedLanguage === language.code}
+                onClick={() => handleLanguageChange(language.code)}
+                className="d-flex align-items-center gap-2"
+            >
+                <span style={{ fontSize: '1.1em' }}>{language.flag}</span>
+                <div>
+                    <div className="fw-bold">{language.nativeName}</div>
+                    <small className="text-muted">{language.name}</small>
+                </div>
+            </Dropdown.Item>
         ))}
       </Dropdown.Menu>
     </Dropdown>

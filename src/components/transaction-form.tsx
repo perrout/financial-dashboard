@@ -1,7 +1,21 @@
 import { useCallback, useState } from "react";
 import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { type FormData, type FormErrors, selectedCountry } from "../mocks";
-import { createTransaction, formatISODate } from "../utils";
+import { useAppStore } from "../store/app-store";
+import { formatISODate } from "../utils";
+
+export interface FormData {
+  description: string;
+  amount: string;
+  currency: string;
+  date: string;
+}
+
+export interface FormErrors {
+  amount?: string;
+  currency?: string;
+  date?: string;
+  general?: string;
+}
 
 interface TransactionFormProps {
   onSuccess?: () => void;
@@ -14,6 +28,8 @@ export default function TransactionForm({
   onCancel,
   className = "",
 }: TransactionFormProps) {
+  const { selectedCountry } = useAppStore();
+  
   const [formData, setFormData] = useState<FormData>({
     description: "",
     amount: "",
@@ -30,16 +46,16 @@ export default function TransactionForm({
       newErrors.amount = "Valor inválido";
     }
     if (!formData.currency) {
-      newErrors.currency = "Moeda obrigatória";
+      newErrors.currency = "Currency is required";
     } else if (!selectedCountry.supportsCurrency(formData.currency)) {
-      newErrors.currency = "Moeda não suportada";
+      newErrors.currency = "Currency not supported";
     }
     if (!formData.date) {
-      newErrors.date = "Data obrigatória";
+      newErrors.date = "Date is required";
     } else {
       const date = new Date(formData.date);
       if (Number.isNaN(date.getTime())) {
-        newErrors.date = "Data inválida";
+        newErrors.date = "Invalid date";
       }
     }
     setErrors(newErrors);
@@ -81,7 +97,7 @@ export default function TransactionForm({
           if (onSuccess) onSuccess();
         }
       } catch (err) {
-        setError("Erro ao criar transação");
+        setError("Error creating transaction");
       } finally {
         setLoading(false);
       }
@@ -95,6 +111,12 @@ export default function TransactionForm({
     return <Form.Text className="text-danger">{fieldError}</Form.Text>;
   };
 
+  const createTransaction = async (formData: FormData): Promise<boolean> => {
+    console.log("createTransaction", formData);
+    // No mock, sempre retorna sucesso
+    return Promise.resolve(true);
+  }
+
   return (
     <Form onSubmit={handleSubmit} className={className}>
       {error && (
@@ -105,11 +127,11 @@ export default function TransactionForm({
       <Row>
         <Col md={12}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="description">Descrição</Form.Label>
+            <Form.Label htmlFor="description">Description</Form.Label>
             <Form.Control
               id="description"
               type="text"
-              placeholder="Descrição da transação"
+              placeholder="Description of the transaction"
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
               disabled={loading}
@@ -121,7 +143,7 @@ export default function TransactionForm({
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="amount">
-              Valor <span className="text-danger">*</span>
+              Amount <span className="text-danger">*</span>
             </Form.Label>
             <Form.Control
               id="amount"
@@ -141,7 +163,7 @@ export default function TransactionForm({
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="currency">
-              Moeda <span className="text-danger">*</span>
+              Currency <span className="text-danger">*</span>
             </Form.Label>
             <Form.Select
               id="currency"
@@ -151,7 +173,7 @@ export default function TransactionForm({
               isInvalid={!!errors.currency}
               required
             >
-              <option value="">Selecione a moeda</option>
+              <option value="">Select the currency</option>
               {selectedCountry.currencies.map((currency) => (
                 <option key={currency.code} value={currency.code}>
                   {currency.code} - {currency.symbol} {currency.name}
@@ -166,7 +188,7 @@ export default function TransactionForm({
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="date">
-              Data <span className="text-danger">*</span>
+              Date <span className="text-danger">*</span>
             </Form.Label>
             <Form.Control
               id="date"
@@ -199,7 +221,7 @@ export default function TransactionForm({
             onClick={onCancel}
             disabled={loading}
           >
-            Cancelar
+            Cancel
           </Button>
         )}
         <Button type="submit" variant="primary" disabled={loading}>
@@ -213,10 +235,10 @@ export default function TransactionForm({
                 aria-hidden="true"
                 className="me-2"
               />
-              Salvando...
+              Saving...
             </>
           ) : (
-            "Salvar"
+            "Save"
           )}
         </Button>
       </div>

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Alert, Button, Spinner, Table } from "react-bootstrap";
-import { MOCK_TRANSACTIONS, type Transaction } from "../mocks";
-import { deleteTransaction, formatCurrency, formatDate } from "../utils";
+import { MOCK_TRANSACTIONS } from "../mocks";
+import type { Transaction } from "../models/transaction";
+import { formatCurrency, formatDate } from "../utils";
 
 interface TransactionListProps {
   onEditTransaction?: (transaction: Transaction) => void;
@@ -30,11 +31,16 @@ export default function TransactionList({
     }
   };
 
+  const deleteTransaction = async (id: string): Promise<void> => {
+    console.log("deleteTransaction", id);
+    return Promise.resolve();
+  };
+
   const renderTransaction = (transaction: Transaction) => (
     <tr key={transaction.id}>
       <td>
         <div className="fw-bold">{transaction.description}</div>
-        <small className="text-muted">{formatDate(transaction.date)}</small>
+        <small className="text-muted">{formatDate(transaction.date.toISOString())}</small>
       </td>
       <td className="text-end">
         <div className="fw-bold text-success">

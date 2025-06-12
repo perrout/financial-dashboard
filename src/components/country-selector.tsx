@@ -1,6 +1,6 @@
-import { type Country, MOCK_COUNTRIES } from "@/mocks";
-import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
+import { Country } from "../models/country";
+import { useAppStore } from "../store/app-store";
 
 // Props do componente
 interface CountrySelectorProps {
@@ -14,9 +14,13 @@ export default function CountrySelector({
   size,
   className = "",
 }: CountrySelectorProps) {
-  const [selectedCountry, setSelectedCountry] = useState<Country>(
-    MOCK_COUNTRIES[0],
-  );
+  const { 
+    selectedCountry, 
+    setSelectedCountry, 
+    getAvailableCountries 
+  } = useAppStore();
+
+  const availableCountries = getAvailableCountries()
 
   const handleCountryChange = (country: Country) => {
     console.log("country", country);
@@ -37,7 +41,8 @@ export default function CountrySelector({
       <Dropdown.Menu>
         <Dropdown.Header>Selecione o país</Dropdown.Header>
         <Dropdown.Divider />
-        {MOCK_COUNTRIES.map((country: Country) => (
+
+        {availableCountries.map((country: Country) => (
           <Dropdown.Item
             key={country.code}
             active={selectedCountry.code === country.code}

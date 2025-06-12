@@ -1,6 +1,6 @@
-import CountrySelector from "@/components/country-selector";
-import LanguageSelector from "@/components/language-selector";
 import { Container, Nav, Navbar } from "react-bootstrap";
+import CountrySelector from "../components/country-selector";
+import LanguageSelector from "../components/language-selector";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

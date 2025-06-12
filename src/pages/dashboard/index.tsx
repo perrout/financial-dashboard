@@ -4,11 +4,14 @@ import TransactionChart from "../../components/transaction-chart";
 import TransactionForm from "../../components/transaction-form";
 import TransactionList from "../../components/transaction-list";
 import DashboardLayout from "../../layouts/dashboard";
-import { MOCK_RATES, MOCK_TRANSACTIONS, selectedCountry } from "../../mocks";
+import { MOCK_RATES, MOCK_TRANSACTIONS } from "../../mocks";
 import type { Transaction } from "../../models/transaction";
+import { useAppStore } from "../../store/app-store";
 import { calculateCountryBalance, formatCurrency } from "../../utils";
 
 export default function DashboardPage() {
+  const { selectedCountry } = useAppStore();
+
   // Estado para modal de transação
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
