@@ -1,9 +1,8 @@
-import { useState } from "react"
 import { Alert, Button, Spinner, Table } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
-import { MOCK_TRANSACTIONS } from "../mocks"
 import type { Transaction } from "../models/transaction"
 import { formatCurrency, formatDate } from "../utils"
+import { useTransactions } from "../hooks/transaction-hook"
 
 interface TransactionListProps {
   onEditTransaction?: (transaction: Transaction) => void
@@ -15,46 +14,34 @@ export default function TransactionList({
   className = "",
 }: TransactionListProps) {
   const { t } = useTranslation()
-  const [transactions, setTransactions] =
-    useState<Transaction[]>(MOCK_TRANSACTIONS)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { transactions, loading, error, deleteTransaction } = useTransactions()
 
   const handleDeleteTransaction = async (id: string) => {
-    setLoading(true)
-    setError(null)
-    try {
+    if (window.confirm(t("transaction.confirmDelete"))) {
       await deleteTransaction(id)
-      setTransactions(prev => prev.filter(t => t.id !== id))
-    } catch (e) {
-      setError("Error deleting transaction.")
-    } finally {
-      setLoading(false)
     }
-  }
-
-  const deleteTransaction = async (id: string): Promise<void> => {
-    console.log("deleteTransaction", id)
-    return Promise.resolve()
   }
 
   const renderTransaction = (transaction: Transaction) => (
     <tr key={transaction.id}>
       <td>
-        <div className="fw-bold">{transaction.description}</div>
+        <div className="fw-bold">
+          {transaction.description || (
+            <span className="text-muted fst-italic">
+              {t("transaction.emptyDescription")}
+            </span>
+          )}
+        </div>
         <small className="text-muted">
           {formatDate(transaction.date.toISOString())}
         </small>
       </td>
-      <td className="text-end">
+      <td className="text-end align-middle">
         <div className="fw-bold text-success">
           {formatCurrency(transaction.amount, transaction.currency.code)}
         </div>
-        <span className="badge bg-secondary fs-6">
-          {transaction.currency.code}
-        </span>
       </td>
-      <td>
+      <td className="align-middle">
         <div className="d-flex gap-1">
           {onEditTransaction && (
             <Button
@@ -102,8 +89,8 @@ export default function TransactionList({
   if (transactions.length === 0) {
     return (
       <Alert variant="info">
-        <Alert.Heading>{t("transaction.empty")}</Alert.Heading>
-        <p className="mb-0">{t("transaction.emptyDescription")}</p>
+        <Alert.Heading>{t("transaction.noData")}</Alert.Heading>
+        <p className="mb-0">{t("transaction.noDataAlert")}</p>
       </Alert>
     )
   }

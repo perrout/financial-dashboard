@@ -3,6 +3,7 @@ import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
 import { useAppStore } from "../store/app-store"
 import { formatISODate } from "../utils"
+import useTransactions from "../hooks/transaction-hook"
 
 export interface FormData {
   description: string
@@ -31,6 +32,7 @@ export default function TransactionForm({
 }: TransactionFormProps) {
   const { t } = useTranslation()
   const { selectedCountry } = useAppStore()
+  const { createTransaction, loading, error, clearError } = useTransactions()
 
   const [formData, setFormData] = useState<FormData>({
     description: "",
@@ -39,8 +41,6 @@ export default function TransactionForm({
     date: formatISODate(new Date()),
   })
   const [errors, setErrors] = useState<FormErrors>({})
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {}
@@ -67,69 +67,86 @@ export default function TransactionForm({
   const handleInputChange = useCallback(
     (field: keyof FormData, value: string) => {
       setFormData(prev => ({ ...prev, [field]: value }))
-      if (field === "amount" || field === "currency" || field === "date") {
-        if (errors[field as keyof FormErrors]) {
-          setErrors(prev => ({
-            ...prev,
-            [field as keyof FormErrors]: undefined,
-          }))
-        }
+
+      // Clear field-specific error
+      if (errors[field as keyof FormErrors]) {
+        setErrors(prev => ({ ...prev, [field]: undefined }))
       }
-      if (error) setError(null)
+
+      // Clear general error
+      if (error) {
+        clearError()
+      }
     },
-    [errors, error]
+    [errors, error, clearError]
   )
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault()
-      if (!validateForm()) return
-      setLoading(true)
-      setError(null)
 
-      setTimeout(async () => {
-        try {
-          const success = await createTransaction(formData)
-          if (success) {
-            setFormData({
-              description: "",
-              amount: "",
-              currency: selectedCountry.primaryCurrency.code,
-              date: formatISODate(new Date()),
-            })
-            setErrors({})
-            if (onSuccess) onSuccess()
-          }
-        } catch (err) {
-          setErrors({
-            general: err instanceof Error ? err.message : t("common.error"),
+      if (!validateForm()) {
+        return
+      }
+
+      try {
+        const success = await createTransaction(formData)
+
+        if (success) {
+          setFormData({
+            description: "",
+            amount: "",
+            currency: selectedCountry.primaryCurrency.code,
+            date: formatISODate(new Date()),
           })
-        } finally {
-          setLoading(false)
+          setErrors({})
+
+          if (onSuccess) {
+            onSuccess()
+          }
         }
-      }, 3000)
+      } catch (err) {
+        setErrors({
+          general: err instanceof Error ? err.message : t("common.error"),
+        })
+      }
     },
-    [formData, validateForm, onSuccess, selectedCountry.primaryCurrency.code, t]
+    [formData, validateForm, createTransaction, selectedCountry, onSuccess, t]
   )
 
   const renderFieldError = (field: keyof FormErrors) => {
     const fieldError = errors[field]
     if (!fieldError) return null
+
     return <Form.Text className="text-danger">{fieldError}</Form.Text>
   }
 
-  const createTransaction = async (formData: FormData): Promise<boolean> => {
-    console.log("createTransaction", formData)
-    return Promise.resolve(true)
+  const renderGeneralError = () => {
+    const allErrors = []
+
+    if (errors.general) {
+      allErrors.push(errors.general)
+    }
+
+    if (error) {
+      allErrors.push(error)
+    }
+
+    if (allErrors.length === 0) return null
+
+    return (
+      <Alert variant="danger" className="mb-3">
+        {allErrors.map((err, index) => (
+          <div key={index}>{err}</div>
+        ))}
+      </Alert>
+    )
   }
 
   return (
     <Form onSubmit={handleSubmit} className={className}>
-      {error && (
-        <Alert variant="danger" className="mb-3">
-          {error}
-        </Alert>
-      )}
+      {renderGeneralError()}
+
       <Row>
         <Col md={12}>
           <Form.Group className="mb-3">

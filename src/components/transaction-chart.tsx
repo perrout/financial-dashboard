@@ -11,12 +11,11 @@ import {
 import { useMemo } from "react"
 import { Alert, Spinner } from "react-bootstrap"
 import { Bar } from "react-chartjs-2"
-import { MOCK_ERROR, MOCK_LOADING, MOCK_TRANSACTIONS } from "../mocks"
-import { calculateDailySummary } from "../utils"
 
 import { useTranslation } from "react-i18next"
 import { useAppStore } from "../store/app-store"
 import { formatCurrency } from "../utils"
+import useTransactions from "../hooks/transaction-hook"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -35,10 +34,7 @@ export default function TransactionChart({
 }: TransactionChartProps) {
   const { t } = useTranslation()
   const { selectedCountry } = useAppStore()
-
-  const dailySummary = calculateDailySummary(MOCK_TRANSACTIONS)
-  const loading = MOCK_LOADING
-  const error = MOCK_ERROR
+  const { dailySummary, loading, error } = useTransactions()
 
   const chartData = useMemo(() => {
     if (!dailySummary || dailySummary.length === 0) {
@@ -175,8 +171,8 @@ export default function TransactionChart({
           <div className="mb-2">
             <i className="bi bi-bar-chart" style={{ fontSize: "3rem" }} />
           </div>
-          <h5>{t("chart.empty")}</h5>
-          <p className="mb-0">{t("common.addTransactionsToVisualizeChart")}</p>
+          <h5>{t("chart.noData")}</h5>
+          <p className="mb-0">{t("chart.noDataAlert")}</p>
         </div>
       </div>
     )

@@ -33,18 +33,8 @@
     "footer": "SmartFastPay © {{year}} • Todos los derechos reservados"
   },
   "transaction": {
-    "create": "Crear Transacción",
-    "edit": "Editar Transacción",
-    "delete": "Eliminar Transacción",
-    "created": "Transacción creada exitosamente",
-    "deleted": "Transacción eliminada exitosamente",
-    "updated": "Transacción actualizada exitosamente",
-    "confirmDelete": "¿Está seguro de que desea eliminar esta transacción?",
-    "empty": "No se encontraron transacciones",
-    "emptyDescription": "Agrega tu primera transacción para empezar a usar el dashboard.",
-    "errorCreating": "Error al crear la transacción",
-    "errorDeleting": "Error al eliminar la transacción",
-    "errorUpdating": "Error al actualizar la transacción",
+    "noData": "No se encontraron transacciones",
+    "noDataAlert": "Agrega tu primera transacción para empezar a usar el dashboard.",
     "actions": "Acciones",
     "amount": "Monto",
     "description": "Descripción",
@@ -52,7 +42,15 @@
     "date": "Fecha",
     "country": "País",
     "countSingular": "{{count}} transacción",
-    "countPlural": "{{count}} transacciones"
+    "countPlural": "{{count}} transacciones",
+    "created": "Transacción creada exitosamente",
+    "deleted": "Transacción eliminada exitosamente",
+    "updated": "Transacción actualizada exitosamente",
+    "confirmDelete": "¿Está seguro de que desea eliminar esta transacción?",
+    "errorCreating": "Error al crear la transacción",
+    "errorDeleting": "Error al eliminar la transacción",
+    "errorUpdating": "Error al actualizar la transacción",
+    "emptyDescription": "Sin descripción"
   },
   "form": {
     "required": "Campo requerido",
@@ -68,9 +66,9 @@
     "dailyVolume": "Volumen Diario",
     "dailyVolumeDescription": "Volumen diario para {{country}}",
     "transactionAmount": "Monto de Transacciones",
-    "empty": "No hay datos disponibles",
-    "emptyDescription": "Agrega transacciones para visualizar el gráfico.",
-    "totalTransactions": "Total de Transacciones"
+    "totalTransactions": "Total de Transacciones",
+    "noData": "No hay datos disponibles",
+    "noDataAlert": "Agrega transacciones para visualizar el gráfico."
   },
   "countries": {
     "BR": "Brasil",

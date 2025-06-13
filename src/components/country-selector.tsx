@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import type { Country } from "../models/country"
 import { useAppStore } from "../store/app-store"
 
-// Props do componente
 interface CountrySelectorProps {
   variant?: "primary" | "outline-primary" | "light"
   size?: "sm" | "lg"

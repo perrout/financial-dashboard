@@ -32,8 +32,8 @@
     "footer": "SmartFastPay © {{year}} • Todos os direitos reservados"
   },
   "transaction": {
-    "empty": "Nenhuma transação encontrada",
-    "emptyDescription": "Adicione sua primeira transação para começar a usar o dashboard.",
+    "noData": "Nenhuma transação encontrada",
+    "noDataAlert": "Adicione sua primeira transação para começar a usar o dashboard.",
     "amount": "Valor",
     "description": "Descrição",
     "currency": "Moeda",
@@ -47,7 +47,8 @@
     "confirmDelete": "Tem certeza que deseja excluir esta transação?",
     "errorCreating": "Erro ao criar transação",
     "errorDeleting": "Erro ao excluir transação",
-    "errorUpdating": "Erro ao atualizar transação"
+    "errorUpdating": "Erro ao atualizar transação",
+    "emptyDescription": "Sem descrição"
   },
   "form": {
     "required": "Campo obrigatório",
@@ -63,9 +64,9 @@
     "dailyVolume": "Volume Diário",
     "dailyVolumeDescription": "Volume diário para {{country}}",
     "transactionAmount": "Valor das Transações",
-    "empty": "Nenhum dado disponível",
-    "emptyDescription": "Adicione transações para visualizar o gráfico.",
-    "totalTransactions": "Total de Transações"
+    "totalTransactions": "Total de Transações",
+    "noData": "Nenhum dado disponível",
+    "noDataAlert": "Adicione transações para visualizar o gráfico."
   },
   "countries": {
     "BR": "Brasil",

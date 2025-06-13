@@ -33,18 +33,8 @@
     "footer": "SmartFastPay © {{year}} • All rights reserved"
   },
   "transaction": {
-    "create": "Create Transaction",
-    "edit": "Edit Transaction",
-    "delete": "Delete Transaction",
-    "created": "Transaction created successfully",
-    "deleted": "Transaction deleted successfully",
-    "updated": "Transaction updated successfully",
-    "confirmDelete": "Are you sure you want to delete this transaction?",
-    "empty": "No transaction",
-    "emptyDescription": "Add your first transaction to start using the dashboard.",
-    "errorCreating": "Error creating transaction",
-    "errorDeleting": "Error deleting transaction",
-    "errorUpdating": "Error updating transaction",
+    "noData": "No transaction",
+    "noDataAlert": "Add your first transaction to start using the dashboard.",
     "actions": "Actions",
     "amount": "Amount",
     "description": "Description",
@@ -52,7 +42,15 @@
     "date": "Date",
     "country": "Country",
     "countSingular": "{{count}} transaction",
-    "countPlural": "{{count}} transactions"
+    "countPlural": "{{count}} transactions",
+    "created": "Transaction created successfully",
+    "deleted": "Transaction deleted successfully",
+    "updated": "Transaction updated successfully",
+    "confirmDelete": "Are you sure you want to delete this transaction?",
+    "errorCreating": "Error creating transaction",
+    "errorDeleting": "Error deleting transaction",
+    "errorUpdating": "Error updating transaction",
+    "emptyDescription": "No description"
   },
   "form": {
     "required": "Required field",
@@ -68,9 +66,9 @@
     "dailyVolume": "Daily Volume",
     "dailyVolumeDescription": "Daily volume for {{country}}",
     "transactionAmount": "Transaction Amount",
-    "empty": "No data available",
-    "emptyDescription": "Add transactions to visualize the chart.",
-    "totalTransactions": "Total Transactions"
+    "totalTransactions": "Total Transactions",
+    "noData": "No data available",
+    "noDataAlert": "Add transactions to visualize the chart."
   },
   "countries": {
     "BR": "Brazil",
