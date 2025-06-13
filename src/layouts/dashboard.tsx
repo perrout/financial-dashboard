@@ -1,14 +1,14 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import CountrySelector from "../components/country-selector";
-import LanguageSelector from "../components/language-selector";
+import { Container, Nav, Navbar } from "react-bootstrap"
+import { useTranslation } from "react-i18next"
+import CountrySelector from "../components/country-selector"
+import LanguageSelector from "../components/language-selector"
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <>
       <Navbar
@@ -32,5 +32,5 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {t("dashboard.footer", { year: new Date().getFullYear() })}
       </footer>
     </>
-  );
+  )
 }

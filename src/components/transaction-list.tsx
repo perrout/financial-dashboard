@@ -1,42 +1,42 @@
-import { useState } from "react";
-import { Alert, Button, Spinner, Table } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { MOCK_TRANSACTIONS } from "../mocks";
-import type { Transaction } from "../models/transaction";
-import { formatCurrency, formatDate } from "../utils";
+import { useState } from "react"
+import { Alert, Button, Spinner, Table } from "react-bootstrap"
+import { useTranslation } from "react-i18next"
+import { MOCK_TRANSACTIONS } from "../mocks"
+import type { Transaction } from "../models/transaction"
+import { formatCurrency, formatDate } from "../utils"
 
 interface TransactionListProps {
-  onEditTransaction?: (transaction: Transaction) => void;
-  className?: string;
+  onEditTransaction?: (transaction: Transaction) => void
+  className?: string
 }
 
 export default function TransactionList({
   onEditTransaction,
   className = "",
 }: TransactionListProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const [transactions, setTransactions] =
-    useState<Transaction[]>(MOCK_TRANSACTIONS);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+    useState<Transaction[]>(MOCK_TRANSACTIONS)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleDeleteTransaction = async (id: string) => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      await deleteTransaction(id);
-      setTransactions((prev) => prev.filter((t) => t.id !== id));
+      await deleteTransaction(id)
+      setTransactions(prev => prev.filter(t => t.id !== id))
     } catch (e) {
-      setError("Error deleting transaction.");
+      setError("Error deleting transaction.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const deleteTransaction = async (id: string): Promise<void> => {
-    console.log("deleteTransaction", id);
-    return Promise.resolve();
-  };
+    console.log("deleteTransaction", id)
+    return Promise.resolve()
+  }
 
   const renderTransaction = (transaction: Transaction) => (
     <tr key={transaction.id}>
@@ -77,17 +77,17 @@ export default function TransactionList({
         </div>
       </td>
     </tr>
-  );
+  )
 
   if (loading && transactions.length === 0) {
     return (
       <div className="text-center py-4">
-        <Spinner animation="border" role="status">
+        <Spinner animation="border" as="output">
           <span className="visually-hidden">{t("common.loading")}</span>
         </Spinner>
         <div className="mt-2">{t("common.loading")}</div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -96,7 +96,7 @@ export default function TransactionList({
         <Alert.Heading>{t("common.error")}</Alert.Heading>
         <p>{error}</p>
       </Alert>
-    );
+    )
   }
 
   if (transactions.length === 0) {
@@ -105,7 +105,7 @@ export default function TransactionList({
         <Alert.Heading>{t("transaction.empty")}</Alert.Heading>
         <p className="mb-0">{t("transaction.emptyDescription")}</p>
       </Alert>
-    );
+    )
   }
 
   return (
@@ -129,5 +129,5 @@ export default function TransactionList({
         </div>
       )}
     </div>
-  );
+  )
 }

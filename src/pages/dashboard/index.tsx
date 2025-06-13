@@ -1,44 +1,44 @@
-import { useState } from "react";
-import { Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import TransactionChart from "../../components/transaction-chart";
-import TransactionForm from "../../components/transaction-form";
-import TransactionList from "../../components/transaction-list";
-import DashboardLayout from "../../layouts/dashboard";
-import { MOCK_RATES, MOCK_TRANSACTIONS } from "../../mocks";
-import type { CountryBalance, Transaction } from "../../models/transaction";
-import { useAppStore } from "../../store/app-store";
-import { calculateCountryBalance, formatCurrency } from "../../utils";
+import { useState } from "react"
+import { Button, Card, Col, Container, Modal, Row } from "react-bootstrap"
+import { useTranslation } from "react-i18next"
+import TransactionChart from "../../components/transaction-chart"
+import TransactionForm from "../../components/transaction-form"
+import TransactionList from "../../components/transaction-list"
+import DashboardLayout from "../../layouts/dashboard"
+import { MOCK_RATES, MOCK_TRANSACTIONS } from "../../mocks"
+import type { CountryBalance, Transaction } from "../../models/transaction"
+import { useAppStore } from "../../store/app-store"
+import { calculateCountryBalance, formatCurrency } from "../../utils"
 
 export default function DashboardPage() {
-  const { t } = useTranslation();
-  const { selectedCountry } = useAppStore();
+  const { t } = useTranslation()
+  const { selectedCountry } = useAppStore()
 
   // Estado para modal de transação
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false)
   const [editingTransaction, setEditingTransaction] =
-    useState<Transaction | null>(null);
+    useState<Transaction | null>(null)
 
-  const rates = MOCK_RATES;
-  const countryBalance = calculateCountryBalance(MOCK_TRANSACTIONS);
+  const rates = MOCK_RATES
+  const countryBalance = calculateCountryBalance(MOCK_TRANSACTIONS)
 
   const handleCloseModal = () => {
-    console.log("handleCloseModal");
-    setShowAddModal(false);
-    setEditingTransaction(null);
-  };
+    console.log("handleCloseModal")
+    setShowAddModal(false)
+    setEditingTransaction(null)
+  }
 
   const handleAddTransaction = () => {
-    console.log("handleAddTransaction");
-    setShowAddModal(true);
-    setEditingTransaction(null);
-  };
+    console.log("handleAddTransaction")
+    setShowAddModal(true)
+    setEditingTransaction(null)
+  }
 
   const handleEditTransaction = (transaction: Transaction) => {
-    console.log("handleEditTransaction");
-    setEditingTransaction(transaction);
-    setShowAddModal(true);
-  };
+    console.log("handleEditTransaction")
+    setEditingTransaction(transaction)
+    setShowAddModal(true)
+  }
 
   const renderBalanceTotals = (arrayCountryBalance: CountryBalance[]) => {
     if (arrayCountryBalance.length === 0) {
@@ -46,42 +46,38 @@ export default function DashboardPage() {
         <div className="text-center">
           <p className="text-muted">{t("transaction.empty")}</p>
         </div>
-      );
+      )
     }
 
     return arrayCountryBalance.map((countryBalance: CountryBalance) => (
-    <div key={countryBalance.country.code}>
-      {countryBalance.balances.map((balance) => (
-        <div
-          key={Math.random()}
-          className="d-flex justify-content-between align-items-center mb-2"
-        >
-          <div className="text-start">
-            <div className="fw-bold">
-              {balance.currency.name}
+      <div key={countryBalance.country.code}>
+        {countryBalance.balances.map(balance => (
+          <div
+            key={Math.random()}
+            className="d-flex justify-content-between align-items-center mb-2"
+          >
+            <div className="text-start">
+              <div className="fw-bold">{balance.currency.name}</div>
+              <small className="text-muted">
+                {balance.transactionCount > 1
+                  ? t("transaction.countPlural", {
+                      count: balance.transactionCount,
+                    })
+                  : t("transaction.countSingular", {
+                      count: balance.transactionCount,
+                    })}
+              </small>
             </div>
-            <small className="text-muted">
-              {balance.transactionCount > 1
-                ? t("transaction.countPlural", {
-                    count: balance.transactionCount,
-                  })
-                : t("transaction.countSingular", {
-                    count: balance.transactionCount,
-                  })}
-            </small>
-          </div>
-          <div className="text-end">
-            <div className="fw-bold text-success">
-              {formatCurrency(
-                balance.amount,
-                balance.currency.code,
-              )}
+            <div className="text-end">
+              <div className="fw-bold text-success">
+                {formatCurrency(balance.amount, balance.currency.code)}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
-    ))};
+        ))}
+      </div>
+    ))
+  }
 
   return (
     <DashboardLayout>
@@ -150,7 +146,7 @@ export default function DashboardPage() {
                       {t("dashboard.availableCurrencies")}
                     </h6>
                     <div className="d-flex flex-column gap-2">
-                      {selectedCountry.currencies.map((currency) => (
+                      {selectedCountry.currencies.map(currency => (
                         <div
                           key={currency.code}
                           className="d-flex justify-content-between align-items-center p-2 bg-light rounded"
@@ -170,7 +166,7 @@ export default function DashboardPage() {
                       <i className="bi bi-currency-exchange" />
                       {t("dashboard.currencyRates")}
                     </h6>
-                    {selectedCountry.currencies.map((currency) => (
+                    {selectedCountry.currencies.map(currency => (
                       <div
                         key={currency.code}
                         className="d-flex justify-content-between align-items-center p-2 bg-light rounded"
@@ -220,5 +216,5 @@ export default function DashboardPage() {
         </Modal.Body>
       </Modal>
     </DashboardLayout>
-  );
+  )
 }

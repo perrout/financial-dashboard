@@ -1,13 +1,13 @@
-import { Dropdown } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { Country } from "../models/country";
-import { useAppStore } from "../store/app-store";
+import { Dropdown } from "react-bootstrap"
+import { useTranslation } from "react-i18next"
+import type { Country } from "../models/country"
+import { useAppStore } from "../store/app-store"
 
 // Props do componente
 interface CountrySelectorProps {
-  variant?: "primary" | "outline-primary" | "light";
-  size?: "sm" | "lg";
-  className?: string;
+  variant?: "primary" | "outline-primary" | "light"
+  size?: "sm" | "lg"
+  className?: string
 }
 
 export default function CountrySelector({
@@ -15,16 +15,16 @@ export default function CountrySelector({
   size,
   className = "",
 }: CountrySelectorProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const { selectedCountry, setSelectedCountry, getAvailableCountries } =
-    useAppStore();
+    useAppStore()
 
-  const availableCountries = getAvailableCountries();
+  const availableCountries = getAvailableCountries()
 
   const handleCountryChange = (country: Country) => {
-    console.log("country", country);
-    setSelectedCountry(country);
-  };
+    console.log("country", country)
+    setSelectedCountry(country)
+  }
 
   return (
     <Dropdown className={className}>
@@ -53,12 +53,12 @@ export default function CountrySelector({
             <div>
               <div className="fw-bold">{country.name}</div>
               <small className="text-muted">
-                {country.currencies.map((c) => c.code).join(", ")}
+                {country.currencies.map(c => c.code).join(", ")}
               </small>
             </div>
           </Dropdown.Item>
         ))}
       </Dropdown.Menu>
     </Dropdown>
-  );
+  )
 }

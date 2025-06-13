@@ -1,27 +1,27 @@
-import { useCallback, useState } from "react";
-import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { useAppStore } from "../store/app-store";
-import { formatISODate } from "../utils";
+import { useCallback, useState } from "react"
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap"
+import { useTranslation } from "react-i18next"
+import { useAppStore } from "../store/app-store"
+import { formatISODate } from "../utils"
 
 export interface FormData {
-  description: string;
-  amount: string;
-  currency: string;
-  date: string;
+  description: string
+  amount: string
+  currency: string
+  date: string
 }
 
 export interface FormErrors {
-  amount?: string;
-  currency?: string;
-  date?: string;
-  general?: string;
+  amount?: string
+  currency?: string
+  date?: string
+  general?: string
 }
 
 interface TransactionFormProps {
-  onSuccess?: () => void;
-  onCancel?: () => void;
-  className?: string;
+  onSuccess?: () => void
+  onCancel?: () => void
+  className?: string
 }
 
 export default function TransactionForm({
@@ -29,99 +29,99 @@ export default function TransactionForm({
   onCancel,
   className = "",
 }: TransactionFormProps) {
-  const { t } = useTranslation();
-  const { selectedCountry } = useAppStore();
+  const { t } = useTranslation()
+  const { selectedCountry } = useAppStore()
 
   const [formData, setFormData] = useState<FormData>({
     description: "",
     amount: "",
     currency: selectedCountry.primaryCurrency.code,
     date: formatISODate(new Date()),
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  })
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const validateForm = useCallback((): boolean => {
-    const newErrors: FormErrors = {};
+    const newErrors: FormErrors = {}
     if (!formData.amount || Number.parseFloat(formData.amount) <= 0) {
-      newErrors.amount = t("form.invalidAmount");
+      newErrors.amount = t("form.invalidAmount")
     }
     if (!formData.currency) {
-      newErrors.currency = t("form.required");
+      newErrors.currency = t("form.required")
     } else if (!selectedCountry.supportsCurrency(formData.currency)) {
-      newErrors.currency = t("form.invalidCurrency");
+      newErrors.currency = t("form.invalidCurrency")
     }
     if (!formData.date) {
-      newErrors.date = t("form.required");
+      newErrors.date = t("form.required")
     } else {
-      const date = new Date(formData.date);
+      const date = new Date(formData.date)
       if (Number.isNaN(date.getTime())) {
-        newErrors.date = t("form.invalidDate");
+        newErrors.date = t("form.invalidDate")
       }
     }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [formData]);
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }, [formData, selectedCountry.supportsCurrency, t])
 
   const handleInputChange = useCallback(
     (field: keyof FormData, value: string) => {
-      setFormData((prev) => ({ ...prev, [field]: value }));
+      setFormData(prev => ({ ...prev, [field]: value }))
       if (field === "amount" || field === "currency" || field === "date") {
         if (errors[field as keyof FormErrors]) {
-          setErrors((prev) => ({
+          setErrors(prev => ({
             ...prev,
             [field as keyof FormErrors]: undefined,
-          }));
+          }))
         }
       }
-      if (error) setError(null);
+      if (error) setError(null)
     },
-    [errors, error],
-  );
+    [errors, error]
+  )
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!validateForm()) return;
-      setLoading(true);
-      setError(null);
+      e.preventDefault()
+      if (!validateForm()) return
+      setLoading(true)
+      setError(null)
 
       setTimeout(async () => {
         try {
-          const success = await createTransaction(formData);
+          const success = await createTransaction(formData)
           if (success) {
             setFormData({
               description: "",
               amount: "",
               currency: selectedCountry.primaryCurrency.code,
               date: formatISODate(new Date()),
-            });
-            setErrors({});
-            if (onSuccess) onSuccess();
+            })
+            setErrors({})
+            if (onSuccess) onSuccess()
           }
         } catch (err) {
           setErrors({
             general: err instanceof Error ? err.message : t("common.error"),
-          });
+          })
         } finally {
-          setLoading(false);
+          setLoading(false)
         }
-      }, 3000);
+      }, 3000)
     },
-    [formData, validateForm, onSuccess],
-  );
+    [formData, validateForm, onSuccess, selectedCountry.primaryCurrency.code, t]
+  )
 
   const renderFieldError = (field: keyof FormErrors) => {
-    const fieldError = errors[field];
-    if (!fieldError) return null;
-    return <Form.Text className="text-danger">{fieldError}</Form.Text>;
-  };
+    const fieldError = errors[field]
+    if (!fieldError) return null
+    return <Form.Text className="text-danger">{fieldError}</Form.Text>
+  }
 
   const createTransaction = async (formData: FormData): Promise<boolean> => {
-    console.log("createTransaction", formData);
-    return Promise.resolve(true);
-  };
+    console.log("createTransaction", formData)
+    return Promise.resolve(true)
+  }
 
   return (
     <Form onSubmit={handleSubmit} className={className}>
@@ -141,7 +141,7 @@ export default function TransactionForm({
               type="text"
               placeholder={t("form.descriptionPlaceholder")}
               value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={e => handleInputChange("description", e.target.value)}
               disabled={loading}
             />
           </Form.Group>
@@ -160,7 +160,7 @@ export default function TransactionForm({
               min="0.01"
               placeholder={t("form.amountPlaceholder")}
               value={formData.amount}
-              onChange={(e) => handleInputChange("amount", e.target.value)}
+              onChange={e => handleInputChange("amount", e.target.value)}
               disabled={loading}
               isInvalid={!!errors.amount}
               required
@@ -176,13 +176,13 @@ export default function TransactionForm({
             <Form.Select
               id="currency"
               value={formData.currency}
-              onChange={(e) => handleInputChange("currency", e.target.value)}
+              onChange={e => handleInputChange("currency", e.target.value)}
               disabled={loading}
               isInvalid={!!errors.currency}
               required
             >
               <option value="">{t("form.selectCurrency")}</option>
-              {selectedCountry.currencies.map((currency) => (
+              {selectedCountry.currencies.map(currency => (
                 <option key={currency.code} value={currency.code}>
                   {currency.code} - {currency.symbol} {currency.name}
                 </option>
@@ -202,7 +202,7 @@ export default function TransactionForm({
               id="date"
               type="date"
               value={formData.date}
-              onChange={(e) => handleInputChange("date", e.target.value)}
+              onChange={e => handleInputChange("date", e.target.value)}
               disabled={loading}
               isInvalid={!!errors.date}
               required
@@ -251,5 +251,5 @@ export default function TransactionForm({
         </Button>
       </div>
     </Form>
-  );
+  )
 }

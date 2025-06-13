@@ -7,62 +7,55 @@ import {
   Title,
   Tooltip,
   type TooltipItem,
-} from "chart.js";
-import { useMemo } from "react";
-import { Alert, Spinner } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
-import { MOCK_ERROR, MOCK_LOADING, MOCK_TRANSACTIONS } from "../mocks";
-import { calculateDailySummary } from "../utils";
+} from "chart.js"
+import { useMemo } from "react"
+import { Alert, Spinner } from "react-bootstrap"
+import { Bar } from "react-chartjs-2"
+import { MOCK_ERROR, MOCK_LOADING, MOCK_TRANSACTIONS } from "../mocks"
+import { calculateDailySummary } from "../utils"
 
-import { useTranslation } from "react-i18next";
-import { useAppStore } from "../store/app-store";
-import { formatCurrency } from "../utils";
+import { useTranslation } from "react-i18next"
+import { useAppStore } from "../store/app-store"
+import { formatCurrency } from "../utils"
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 interface TransactionChartProps {
-  height?: number;
-  className?: string;
+  height?: number
+  className?: string
 }
 
 const CHART_COLORS = {
   primary: "#0d6efd",
-};
+}
 
 export default function TransactionChart({
   height = 300,
   className = "",
 }: TransactionChartProps) {
-  const { t } = useTranslation();
-  const { selectedCountry } = useAppStore();
+  const { t } = useTranslation()
+  const { selectedCountry } = useAppStore()
 
-  const dailySummary = calculateDailySummary(MOCK_TRANSACTIONS);
-  const loading = MOCK_LOADING;
-  const error = MOCK_ERROR;
+  const dailySummary = calculateDailySummary(MOCK_TRANSACTIONS)
+  const loading = MOCK_LOADING
+  const error = MOCK_ERROR
 
   const chartData = useMemo(() => {
     if (!dailySummary || dailySummary.length === 0) {
-      return { labels: [], datasets: [] };
+      return { labels: [], datasets: [] }
     }
     return {
-      labels: dailySummary.map((item) => {
-        const date = new Date(item.date);
+      labels: dailySummary.map(item => {
+        const date = new Date(item.date)
         return date.toLocaleDateString("pt-BR", {
           day: "2-digit",
           month: "2-digit",
-        });
+        })
       }),
       datasets: [
         {
           label: t("chart.dailyVolume"),
-          data: dailySummary.map((item) => item.totalAmount),
+          data: dailySummary.map(item => item.totalAmount),
           backgroundColor: `${CHART_COLORS.primary}80`,
           borderColor: CHART_COLORS.primary,
           borderWidth: 1,
@@ -70,8 +63,8 @@ export default function TransactionChart({
           borderSkipped: false,
         },
       ],
-    };
-  }, [dailySummary]);
+    }
+  }, [dailySummary, t])
 
   const chartOptions = useMemo(
     () => ({
@@ -84,24 +77,28 @@ export default function TransactionChart({
         },
         title: {
           display: true,
-          text: `${t("chart.dailyVolumeDescription", { country: selectedCountry.flag + " " + selectedCountry.name })}`,
+          text: `${t("chart.dailyVolumeDescription", { country: `${selectedCountry.flag} ${selectedCountry.name}` })}`,
           font: { size: 16, weight: "bold" as const },
         },
         tooltip: {
           callbacks: {
             label: (context: TooltipItem<"bar">) => {
-              const value = context.parsed.y;
-              return formatCurrency(value, selectedCountry.primaryCurrency.code);
+              const value = context.parsed.y
+              return formatCurrency(value, selectedCountry.primaryCurrency.code)
             },
             afterLabel: (context: TooltipItem<"bar">) => {
-              const dataIndex = context.dataIndex;
-              const dayData = dailySummary?.[dataIndex];
+              const dataIndex = context.dataIndex
+              const dayData = dailySummary?.[dataIndex]
               if (dayData) {
                 return dayData.transactionCount > 1
-                  ? t("transaction.countPlural", { count: dayData.transactionCount })
-                  : t("transaction.countSingular", { count: dayData.transactionCount });
+                  ? t("transaction.countPlural", {
+                      count: dayData.transactionCount,
+                    })
+                  : t("transaction.countSingular", {
+                      count: dayData.transactionCount,
+                    })
               }
-              return "";
+              return ""
             },
           },
         },
@@ -126,7 +123,7 @@ export default function TransactionChart({
             callback: (value: string | number) =>
               formatCurrency(
                 Number(value),
-                selectedCountry.primaryCurrency.code,
+                selectedCountry.primaryCurrency.code
               ),
           },
         },
@@ -134,8 +131,14 @@ export default function TransactionChart({
       interaction: { intersect: false, mode: "index" as const },
       animation: { duration: 750, easing: "easeInOutQuart" as const },
     }),
-    [dailySummary],
-  );
+    [
+      dailySummary,
+      t,
+      selectedCountry.flag,
+      selectedCountry.name,
+      selectedCountry.primaryCurrency.code,
+    ]
+  )
 
   if (loading) {
     return (
@@ -144,13 +147,13 @@ export default function TransactionChart({
         style={{ height }}
       >
         <div className="text-center">
-          <Spinner animation="border" role="status">
+          <Spinner animation="border" as="output">
             <span className="visually-hidden">{t("common.loading")}</span>
           </Spinner>
           <div className="mt-2">{t("common.loading")}</div>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -159,7 +162,7 @@ export default function TransactionChart({
         <Alert.Heading>{t("common.error")}</Alert.Heading>
         <p>{error}</p>
       </Alert>
-    );
+    )
   }
 
   if (!dailySummary || dailySummary.length === 0) {
@@ -176,7 +179,7 @@ export default function TransactionChart({
           <p className="mb-0">{t("common.addTransactionsToVisualizeChart")}</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -185,5 +188,5 @@ export default function TransactionChart({
         <Bar data={chartData} options={chartOptions} />
       </div>
     </div>
-  );
+  )
 }

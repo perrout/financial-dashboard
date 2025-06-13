@@ -1,13 +1,13 @@
-import { useEffect } from "react";
-import { Dropdown } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { type SupportedLanguage, useAppStore } from "../store/app-store";
+import { useEffect } from "react"
+import { Dropdown } from "react-bootstrap"
+import { useTranslation } from "react-i18next"
+import { type SupportedLanguage, useAppStore } from "../store/app-store"
 
 interface LanguageSelectorProps {
-  variant?: "primary" | "outline-primary" | "light" | "link";
-  size?: "sm" | "lg";
-  showText?: boolean;
-  className?: string;
+  variant?: "primary" | "outline-primary" | "light" | "link"
+  size?: "sm" | "lg"
+  showText?: boolean
+  className?: string
 }
 
 export default function LanguageSelector({
@@ -17,24 +17,24 @@ export default function LanguageSelector({
   className = "",
 }: LanguageSelectorProps) {
   const { selectedLanguage, setSelectedLanguage, getSupportedLanguages } =
-    useAppStore();
+    useAppStore()
 
-  const { i18n } = useTranslation();
-  const supportedLanguages = getSupportedLanguages();
+  const { i18n } = useTranslation()
+  const supportedLanguages = getSupportedLanguages()
   const currentLanguage =
-    supportedLanguages.find((lang) => lang.code === selectedLanguage) ||
-    supportedLanguages[0];
+    supportedLanguages.find(lang => lang.code === selectedLanguage) ||
+    supportedLanguages[0]
 
   const handleLanguageChange = async (languageCode: SupportedLanguage) => {
-    setSelectedLanguage(languageCode);
-    await i18n.changeLanguage(languageCode);
-  };
+    setSelectedLanguage(languageCode)
+    await i18n.changeLanguage(languageCode)
+  }
 
   useEffect(() => {
     if (i18n.language !== selectedLanguage) {
-      handleLanguageChange(selectedLanguage);
+      i18n.changeLanguage(selectedLanguage)
     }
-  }, [i18n, selectedLanguage]);
+  }, [i18n, selectedLanguage])
 
   return (
     <Dropdown className={className}>
@@ -59,7 +59,7 @@ export default function LanguageSelector({
         )}
       </Dropdown.Toggle>
       <Dropdown.Menu align="end">
-        {supportedLanguages.map((language) => (
+        {supportedLanguages.map(language => (
           <Dropdown.Item
             key={language.code}
             active={selectedLanguage === language.code}
@@ -75,5 +75,5 @@ export default function LanguageSelector({
         ))}
       </Dropdown.Menu>
     </Dropdown>
-  );
+  )
 }

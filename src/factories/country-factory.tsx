@@ -1,109 +1,103 @@
-import { Country } from "../models/country";
-import { CurrencyFactory } from "./currency-factory";
+import { Country } from "../models/country"
+import { CurrencyFactory } from "./currency-factory"
 
 export interface CountryData {
-  code: string;
-  name: string;
-  currencyCodes: string[];
-  flag: string;
+  code: string
+  name: string
+  currencyCodes: string[]
+  flag: string
 }
 
-export class CountryFactory {
-  private static readonly DEFAULT_COUNTRIES: Record<string, CountryData> = {
-    BR: {
-      code: "BR",
-      name: "Brasil",
-      currencyCodes: ["BRL", "USD"],
-      flag: "🇧🇷",
-    },
-    CO: {
-      code: "CO",
-      name: "Colômbia",
-      currencyCodes: ["COP", "USD"],
-      flag: "🇨🇴",
-    },
-    US: {
-      code: "US",
-      name: "Estados Unidos",
-      currencyCodes: ["USD"],
-      flag: "🇺🇸",
-    },
-  };
+export type CountryCode = "BR" | "CO" | "US"
 
-  static createFromCode(code: string): Country {
-    const countryData = this.DEFAULT_COUNTRIES[code];
-    if (!countryData) {
-      throw new Error(`Unsupported country code: ${code}`);
-    }
+export const DEFAULT_COUNTRIES: Record<CountryCode, CountryData> = {
+  BR: {
+    code: "BR",
+    name: "Brasil",
+    currencyCodes: ["BRL", "USD"],
+    flag: "🇧🇷",
+  },
+  CO: {
+    code: "CO",
+    name: "Colômbia",
+    currencyCodes: ["COP", "USD"],
+    flag: "🇨🇴",
+  },
+  US: {
+    code: "US",
+    name: "Estados Unidos",
+    currencyCodes: ["USD"],
+    flag: "🇺🇸",
+  },
+} as const
 
+export const CountryFactory = {
+  createFromCode(code: CountryCode): Country {
+    const countryData = DEFAULT_COUNTRIES[code]
+    if (!countryData) throw new Error(`Unsupported country code: ${code}`)
     const currencies = countryData.currencyCodes
-      .filter((currencyCode) =>
-        CurrencyFactory.isSupportedCurrency(currencyCode),
-      )
-      .map((currencyCode) => CurrencyFactory.createFromCode(currencyCode));
-
-    if (currencies.length === 0) {
-      throw new Error(`No supported currencies found for country: ${code}`);
-    }
-
+      .filter(CurrencyFactory.isSupportedCurrency)
+      .map(CurrencyFactory.createFromCode)
+    if (currencies.length === 0)
+      throw new Error(`No supported currencies found for country: ${code}`)
     return Country.create({
       code: countryData.code,
       name: countryData.name,
       currencies,
       flag: countryData.flag,
-    });
-  }
+    })
+  },
 
-  static createFromData(data: CountryData): Country {
+  createFromData(data: CountryData): Country {
     const currencies = data.currencyCodes
-      .filter((currencyCode) =>
-        CurrencyFactory.isSupportedCurrency(currencyCode),
-      )
-      .map((currencyCode) => CurrencyFactory.createFromCode(currencyCode));
+      .filter(currencyCode => CurrencyFactory.isSupportedCurrency(currencyCode))
+      .map(currencyCode => CurrencyFactory.createFromCode(currencyCode))
 
     return Country.create({
       code: data.code,
       name: data.name,
       currencies,
       flag: data.flag,
-    });
-  }
+    })
+  },
 
-  static createBrazil(): Country {
-    return this.createFromCode("BR");
-  }
+  createBrazil(): Country {
+    return CountryFactory.createFromCode("BR")
+  },
 
-  static createColombia(): Country {
-    return this.createFromCode("CO");
-  }
+  createColombia(): Country {
+    return CountryFactory.createFromCode("CO")
+  },
 
-  static createUSA(): Country {
-    return this.createFromCode("US");
-  }
+  createUSA(): Country {
+    return CountryFactory.createFromCode("US")
+  },
 
-  static getSupportedCountries(): Country[] {
-    return Object.keys(this.DEFAULT_COUNTRIES).map((code) =>
-      this.createFromCode(code),
-    );
-  }
+  getSupportedCountries(): Country[] {
+    return Object.keys(DEFAULT_COUNTRIES).map(code =>
+      CountryFactory.createFromCode(code as CountryCode)
+    )
+  },
 
-  static getDefaultCountries(): Country[] {
-    return [this.createBrazil(), this.createColombia()];
-  }
+  getDefaultCountries(): Country[] {
+    return [CountryFactory.createBrazil(), CountryFactory.createColombia()]
+  },
 
-  static isSupportedCountry(code: string): boolean {
-    return code in this.DEFAULT_COUNTRIES;
-  }
+  isSupportedCountry(code: string): boolean {
+    return code in DEFAULT_COUNTRIES
+  },
 
-  static getCountryData(code: string): CountryData | null {
-    return this.DEFAULT_COUNTRIES[code] || null;
-  }
+  getCountryData(code: CountryCode): CountryData | null {
+    return DEFAULT_COUNTRIES[code] || null
+  },
 
-  static findByName(name: string): Country | null {
-    const countryEntry = Object.entries(this.DEFAULT_COUNTRIES).find(
-      ([, data]) => data.name.toLowerCase() === name.toLowerCase(),
-    );
+  findByName(name: string): Country | null {
+    const countryEntry = Object.entries(DEFAULT_COUNTRIES).find(
+      ([, data]) => data.name.toLowerCase() === name.toLowerCase()
+    )
 
-    return countryEntry ? this.createFromCode(countryEntry[0]) : null;
-  }
+    return countryEntry
+      ? CountryFactory.createFromCode(countryEntry[0] as CountryCode)
+      : null
+  },
 }

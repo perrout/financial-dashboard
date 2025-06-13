@@ -1,6 +1,6 @@
-import { CountryFactory } from "../factories/country-factory";
-import { CurrencyFactory } from "../factories/currency-factory";
-import type { Transaction } from "../models/transaction";
+import { CountryFactory } from "../factories/country-factory"
+import { CurrencyFactory } from "../factories/currency-factory"
+import type { Transaction } from "../models/transaction"
 
 // Mock do modelo Transaction
 export const MOCK_TRANSACTIONS: Transaction[] = [
@@ -49,14 +49,14 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     country: CountryFactory.createBrazil(),
     createdAt: new Date("2025-06-04T10:00:00Z"),
   },
-];
+]
 
-export const MOCK_LOADING = false;
-export const MOCK_ERROR = null;
+export const MOCK_LOADING = false
+export const MOCK_ERROR = null
 
 // Mock de taxas de câmbio
 export const MOCK_RATES: Record<string, number> = {
   BRL: 5.5,
   COP: 4000,
   USD: 1,
-};
+}
