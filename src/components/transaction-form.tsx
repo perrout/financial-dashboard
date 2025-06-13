@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
 import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
 import { useAppStore } from "../store/app-store"
 import { formatISODate } from "../utils"
-import useTransactions from "../hooks/transaction-hook"
+import type { Transaction } from "../models/transaction"
 
 export interface FormData {
   description: string
@@ -20,6 +20,15 @@ export interface FormErrors {
 }
 
 interface TransactionFormProps {
+  transaction?: Transaction | null
+  createTransaction: (formData: FormData) => Promise<boolean>
+  updateTransaction: (
+    id: string,
+    updates: Partial<FormData>
+  ) => Promise<boolean>
+  loading: boolean
+  error: string | null
+  clearError: () => void
   onSuccess?: () => void
   onCancel?: () => void
   className?: string
@@ -29,10 +38,15 @@ export default function TransactionForm({
   onSuccess,
   onCancel,
   className = "",
+  transaction = null,
+  createTransaction,
+  updateTransaction,
+  loading,
+  error,
+  clearError,
 }: TransactionFormProps) {
   const { t } = useTranslation()
   const { selectedCountry } = useAppStore()
-  const { createTransaction, loading, error, clearError } = useTransactions()
 
   const [formData, setFormData] = useState<FormData>({
     description: "",
@@ -41,6 +55,34 @@ export default function TransactionForm({
     date: formatISODate(new Date()),
   })
   const [errors, setErrors] = useState<FormErrors>({})
+
+  useEffect(() => {
+    if (transaction) {
+      setFormData({
+        description: transaction.description ?? "",
+        amount: String(transaction.amount),
+        currency:
+          typeof transaction.currency === "string"
+            ? transaction.currency
+            : transaction.currency.code,
+        date: transaction.date
+          ? formatISODate(
+              typeof transaction.date === "string"
+                ? new Date(transaction.date)
+                : transaction.date
+            )
+          : formatISODate(new Date()),
+      })
+    } else {
+      setFormData({
+        description: "",
+        amount: "",
+        currency: selectedCountry.primaryCurrency.code,
+        date: formatISODate(new Date()),
+      })
+    }
+    setErrors({})
+  }, [transaction, selectedCountry.primaryCurrency.code])
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {}
@@ -90,7 +132,21 @@ export default function TransactionForm({
       }
 
       try {
-        const success = await createTransaction(formData)
+        let success = false
+        if (transaction) {
+          success = await updateTransaction(transaction.id, {
+            description: formData.description,
+            amount: formData.amount,
+            currency: formData.currency,
+            date: `${formData.date}T00:00:00Z`,
+          })
+        } else {
+          success = await createTransaction({
+            ...formData,
+            currency: formData.currency,
+            date: `${formData.date}T00:00:00Z`,
+          })
+        }
 
         if (success) {
           setFormData({
@@ -111,7 +167,16 @@ export default function TransactionForm({
         })
       }
     },
-    [formData, validateForm, createTransaction, selectedCountry, onSuccess, t]
+    [
+      formData,
+      validateForm,
+      createTransaction,
+      updateTransaction,
+      transaction,
+      selectedCountry,
+      onSuccess,
+      t,
+    ]
   )
 
   const renderFieldError = (field: keyof FormErrors) => {
@@ -136,8 +201,8 @@ export default function TransactionForm({
 
     return (
       <Alert variant="danger" className="mb-3">
-        {allErrors.map((err, index) => (
-          <div key={index}>{err}</div>
+        {allErrors.map(err => (
+          <div key={err}>{err}</div>
         ))}
       </Alert>
     )

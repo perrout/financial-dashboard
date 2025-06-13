@@ -15,13 +15,17 @@ import { Bar } from "react-chartjs-2"
 import { useTranslation } from "react-i18next"
 import { useAppStore } from "../store/app-store"
 import { formatCurrency } from "../utils"
-import useTransactions from "../hooks/transaction-hook"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+import type { DailyTransactionSummary } from "../services/transaction-service"
 
 interface TransactionChartProps {
   height?: number
   className?: string
+  dailySummary: DailyTransactionSummary[] | null
+  loading: boolean
+  error: string | null
 }
 
 const CHART_COLORS = {
@@ -31,10 +35,13 @@ const CHART_COLORS = {
 export default function TransactionChart({
   height = 300,
   className = "",
+  dailySummary,
+  loading,
+  error,
 }: TransactionChartProps) {
   const { t } = useTranslation()
   const { selectedCountry } = useAppStore()
-  const { dailySummary, loading, error } = useTransactions()
+  const hasDailySummary = dailySummary && dailySummary.length > 0
 
   const chartData = useMemo(() => {
     if (!dailySummary || dailySummary.length === 0) {
@@ -136,7 +143,7 @@ export default function TransactionChart({
     ]
   )
 
-  if (loading) {
+  if (loading && !hasDailySummary) {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
@@ -161,7 +168,7 @@ export default function TransactionChart({
     )
   }
 
-  if (!dailySummary || dailySummary.length === 0) {
+  if (!hasDailySummary) {
     return (
       <div
         className="d-flex justify-content-center align-items-center bg-light rounded"

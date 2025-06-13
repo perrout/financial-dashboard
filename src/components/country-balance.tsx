@@ -1,14 +1,23 @@
 import { useTranslation } from "react-i18next"
-import useTransactions from "../hooks/transaction-hook"
 import { formatCurrency } from "../utils"
 import { Alert } from "react-bootstrap"
 import { Spinner } from "react-bootstrap"
+import type { CountryBalance as CountryBalanceType } from "../services/transaction-service"
 
-export default function CountryBalance() {
+interface CountryBalanceComponentProps {
+  countryBalance: CountryBalanceType | null
+  loading: boolean
+  error: string | null
+}
+
+export default function CountryBalance({
+  countryBalance,
+  loading,
+  error,
+}: CountryBalanceComponentProps) {
   const { t } = useTranslation()
-  const { countryBalance, loading, error } = useTransactions()
 
-  if (loading) {
+  if (loading && !countryBalance) {
     return (
       <div className="text-center py-4">
         <Spinner animation="border" as="output">

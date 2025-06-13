@@ -10,10 +10,24 @@ import DashboardLayout from "../../layouts/dashboard"
 import CountryBalance from "../../components/country-balance"
 import CountryCurrencies from "../../components/country-currencies"
 import CountryCurrencyRates from "../../components/country-currency-rates"
+import useTransactions from "../../hooks/use-transactions"
 
 export default function DashboardPage() {
   const { t } = useTranslation()
   const { selectedCountry } = useAppStore()
+
+  // Hook centralizado
+  const {
+    transactions,
+    loading,
+    error,
+    createTransaction,
+    updateTransaction,
+    deleteTransaction,
+    clearError,
+    dailySummary,
+    countryBalance,
+  } = useTransactions()
 
   // Estado para modal de transação
   const [showAddModal, setShowAddModal] = useState(false)
@@ -21,19 +35,16 @@ export default function DashboardPage() {
     useState<Transaction | null>(null)
 
   const handleCloseModal = () => {
-    console.log("handleCloseModal")
     setShowAddModal(false)
     setEditingTransaction(null)
   }
 
   const handleAddTransaction = () => {
-    console.log("handleAddTransaction")
     setShowAddModal(true)
     setEditingTransaction(null)
   }
 
   const handleEditTransaction = (transaction: Transaction) => {
-    console.log("handleEditTransaction")
     setEditingTransaction(transaction)
     setShowAddModal(true)
   }
@@ -84,7 +95,12 @@ export default function DashboardPage() {
                 </h5>
               </Card.Header>
               <Card.Body>
-                <TransactionChart height={437} />
+                <TransactionChart
+                  height={437}
+                  dailySummary={dailySummary}
+                  loading={loading}
+                  error={error}
+                />
               </Card.Body>
             </Card>
           </Col>
@@ -98,7 +114,11 @@ export default function DashboardPage() {
                     <h6 className="text-muted mb-2">
                       {t("dashboard.totalBalance")}
                     </h6>
-                    <CountryBalance />
+                    <CountryBalance
+                      countryBalance={countryBalance || null}
+                      loading={loading}
+                      error={error}
+                    />
                   </Card.Body>
                 </Card>
               </Col>
@@ -139,7 +159,13 @@ export default function DashboardPage() {
                 </h5>
               </Card.Header>
               <Card.Body>
-                <TransactionList onEditTransaction={handleEditTransaction} />
+                <TransactionList
+                  transactions={transactions}
+                  loading={loading}
+                  error={error}
+                  deleteTransaction={deleteTransaction}
+                  onEditTransaction={handleEditTransaction}
+                />
               </Card.Body>
             </Card>
           </Col>
@@ -157,6 +183,12 @@ export default function DashboardPage() {
         </Modal.Header>
         <Modal.Body>
           <TransactionForm
+            transaction={editingTransaction}
+            createTransaction={createTransaction}
+            updateTransaction={updateTransaction}
+            loading={loading}
+            error={error}
+            clearError={clearError}
             onSuccess={handleTransactionSuccess}
             onCancel={handleCloseModal}
           />

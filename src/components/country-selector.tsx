@@ -21,7 +21,6 @@ export default function CountrySelector({
   const availableCountries = getAvailableCountries()
 
   const handleCountryChange = (country: Country) => {
-    console.log("country", country)
     setSelectedCountry(country)
   }
 

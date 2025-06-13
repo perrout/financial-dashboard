@@ -1,6 +1,6 @@
 import type { Country } from "../models/country"
 import { Transaction } from "../models/transaction"
-import { CountryFactory } from "./country-factory"
+import { CountryFactory, type CountryCode } from "./country-factory"
 import { CurrencyFactory } from "./currency-factory"
 
 export interface CreateTransactionData {
@@ -60,7 +60,9 @@ export const TransactionFactory = {
 
   recreateFromStorage(data: TransactionData): Transaction {
     const currency = CurrencyFactory.createFromCode(data.currencyCode)
-    const country = CountryFactory.createFromCode(data.countryCode)
+    const country = CountryFactory.createFromCode(
+      data.countryCode as CountryCode
+    )
     const date = typeof data.date === "string" ? new Date(data.date) : data.date
     const createdAt =
       typeof data.createdAt === "string"

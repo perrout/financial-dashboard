@@ -2,19 +2,25 @@ import { Alert, Button, Spinner, Table } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
 import type { Transaction } from "../models/transaction"
 import { formatCurrency, formatDate } from "../utils"
-import { useTransactions } from "../hooks/transaction-hook"
 
 interface TransactionListProps {
+  transactions: Transaction[]
+  loading: boolean
+  error: string | null
+  deleteTransaction: (id: string) => Promise<boolean>
   onEditTransaction?: (transaction: Transaction) => void
   className?: string
 }
 
 export default function TransactionList({
+  transactions,
+  loading,
+  error,
+  deleteTransaction,
   onEditTransaction,
   className = "",
 }: TransactionListProps) {
   const { t } = useTranslation()
-  const { transactions, loading, error, deleteTransaction } = useTransactions()
 
   const handleDeleteTransaction = async (id: string) => {
     if (window.confirm(t("transaction.confirmDelete"))) {

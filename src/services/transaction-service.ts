@@ -113,11 +113,13 @@ export class TransactionService {
 
   async getCountryBalance(countryCode: string): Promise<CountryBalance | null> {
     const transactions = await this.getTransactionsByCountry(countryCode)
-
     if (transactions.length === 0) {
       return null
     }
+    return this.calculateCountryBalance(transactions)
+  }
 
+  calculateCountryBalance(transactions: Transaction[]): CountryBalance {
     const country = transactions[0].country
     const currencyBalances = new Map<string, CurrencyBalance>()
 
@@ -167,7 +169,7 @@ export class TransactionService {
     return all.filter(t => t.date >= startDate && t.date <= endDate)
   }
 
-  private calculateDailySummary(
+  calculateDailySummary(
     transactions: Transaction[]
   ): DailyTransactionSummary[] {
     const dailyMap = new Map<

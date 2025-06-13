@@ -26,6 +26,8 @@ export interface UseTransactionsResult {
     updates: {
       description?: string
       amount?: string
+      currency?: string
+      date?: string
     }
   ) => Promise<boolean>
 
@@ -48,13 +50,12 @@ export const useTransactions = (): UseTransactionsResult => {
     loading: storeLoading,
     error,
     addTransaction,
-    updateTransaction: storeUpdateTransaction,
-    deleteTransaction: storeDeleteTransaction,
+    editTransaction,
+    removeTransaction,
     fetchTransactions,
     clearError,
     getTransactionsByCountry,
-    getDailySummary,
-    getCountryBalance,
+    transactionService,
   } = useTransactionStore()
 
   const [dailySummary, setDailySummary] = useState<
@@ -67,7 +68,7 @@ export const useTransactions = (): UseTransactionsResult => {
 
   // Filtered transactions for current country - memoized to prevent recalculation
   const transactions = useMemo(() => {
-    // console.log("storeTransactions", storeTransactions)
+    console.log("transactions", storeTransactions)
     return getTransactionsByCountry(selectedCountry.code)
   }, [storeTransactions, selectedCountry.code, getTransactionsByCountry])
 
@@ -86,10 +87,8 @@ export const useTransactions = (): UseTransactionsResult => {
 
     setSummaryLoading(true)
     try {
-      const [summary, balance] = await Promise.all([
-        getDailySummary(selectedCountry.code),
-        getCountryBalance(selectedCountry.code),
-      ])
+      const summary = transactionService.calculateDailySummary(transactions)
+      const balance = transactionService.calculateCountryBalance(transactions)
 
       setDailySummary(summary)
       setCountryBalance(balance)
@@ -98,12 +97,7 @@ export const useTransactions = (): UseTransactionsResult => {
     } finally {
       setSummaryLoading(false)
     }
-  }, [
-    selectedCountry.code,
-    transactions.length,
-    getDailySummary,
-    getCountryBalance,
-  ])
+  }, [transactions, transactionService])
 
   // Load summary data when transactions change
   useEffect(() => {
@@ -117,12 +111,7 @@ export const useTransactions = (): UseTransactionsResult => {
       currency: string
       date: string
     }) => {
-      const success = await addTransaction(formData, selectedCountry)
-      if (success) {
-        // Summary will be reloaded automatically via useEffect when transactions change
-        // refreshTransactions()
-      }
-      return success
+      return await addTransaction(formData, selectedCountry)
     },
     [addTransaction, selectedCountry]
   )
@@ -133,31 +122,24 @@ export const useTransactions = (): UseTransactionsResult => {
       updates: {
         description?: string
         amount?: string
+        currency?: string
+        date?: string
       }
     ) => {
-      const success = await storeUpdateTransaction(id, updates)
-      if (success) {
-        // Summary will be reloaded automatically via useEffect when transactions change
-      }
-      return success
+      return await editTransaction(id, updates)
     },
-    [storeUpdateTransaction]
+    [editTransaction]
   )
 
   const deleteTransaction = useCallback(
     async (id: string) => {
-      const success = await storeDeleteTransaction(id)
-      if (success) {
-        // Summary will be reloaded automatically via useEffect when transactions change
-      }
-      return success
+      return await removeTransaction(id)
     },
-    [storeDeleteTransaction]
+    [removeTransaction]
   )
 
   const refreshTransactions = useCallback(async () => {
     await fetchTransactions(selectedCountry.code)
-    // Summary will be reloaded automatically via useEffect when transactions change
   }, [fetchTransactions, selectedCountry.code])
 
   return {

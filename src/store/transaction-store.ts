@@ -29,12 +29,14 @@ interface TransactionState {
   ) => Promise<boolean>
 
   fetchTransactions: (countryCode?: string) => Promise<void>
-  deleteTransaction: (id: string) => Promise<boolean>
-  updateTransaction: (
+  removeTransaction: (id: string) => Promise<boolean>
+  editTransaction: (
     id: string,
     updates: {
       description?: string
       amount?: string
+      currency?: string
+      date?: string
     }
   ) => Promise<boolean>
   clearError: () => void
@@ -107,7 +109,7 @@ export const useTransactionStore = create<TransactionState>()(
           }
         },
 
-        deleteTransaction: async id => {
+        removeTransaction: async id => {
           set({ loading: true, error: null })
           try {
             const success = await transactionService.deleteTransaction(id)
@@ -132,30 +134,22 @@ export const useTransactionStore = create<TransactionState>()(
           }
         },
 
-        updateTransaction: async (id, updates) => {
+        editTransaction: async (id, updates) => {
           set({ loading: true, error: null })
           try {
-            const parsedUpdates: Record<string, unknown> = { ...updates }
-            if (updates.amount) {
-              parsedUpdates.amount = Number.parseFloat(updates.amount)
-            }
-            const updated = await transactionService.updateTransaction(
-              id,
-              parsedUpdates
-            )
-            if (updated) {
-              // Busca a transação atualizada para garantir consistência
-              const updatedTransaction =
-                await transactionService.getTransactionById(id)
-              set(state => ({
-                transactions: state.transactions.map(t =>
-                  t.id === id && updatedTransaction ? updatedTransaction : t
-                ),
-                loading: false,
-              }))
-            } else {
-              set({ loading: false })
-            }
+            const updated = await transactionService.updateTransaction(id, {
+              description: updates.description ?? undefined,
+              amount: updates.amount ? Number(updates.amount) : undefined,
+              currencyCode: updates.currency ?? undefined,
+              date: updates.date ? new Date(updates.date) : undefined,
+              countryCode: undefined,
+            })
+            set(state => ({
+              transactions: state.transactions.map(t =>
+                t.id === id && updated ? updated : t
+              ),
+              loading: false,
+            }))
             return true
           } catch (error) {
             set({
