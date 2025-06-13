@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Dropdown } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { type SupportedLanguage, useAppStore } from "../store/app-store";
 
 interface LanguageSelectorProps {
@@ -14,21 +16,25 @@ export default function LanguageSelector({
   showText = false,
   className = "",
 }: LanguageSelectorProps) {
-  const {
-      selectedLanguage,
-      setSelectedLanguage,
-      getSupportedLanguages
-  } = useAppStore()
+  const { selectedLanguage, setSelectedLanguage, getSupportedLanguages } =
+    useAppStore();
 
-  const supportedLanguages = getSupportedLanguages()
-  const currentLanguage = supportedLanguages.find(
-      lang => lang.code === selectedLanguage
-  ) || supportedLanguages[0]
+  const { i18n } = useTranslation();
+  const supportedLanguages = getSupportedLanguages();
+  const currentLanguage =
+    supportedLanguages.find((lang) => lang.code === selectedLanguage) ||
+    supportedLanguages[0];
 
   const handleLanguageChange = async (languageCode: SupportedLanguage) => {
-    console.log("languageCode", languageCode);
-    setSelectedLanguage(languageCode)
-  }
+    setSelectedLanguage(languageCode);
+    await i18n.changeLanguage(languageCode);
+  };
+
+  useEffect(() => {
+    if (i18n.language !== selectedLanguage) {
+      handleLanguageChange(selectedLanguage);
+    }
+  }, [i18n, selectedLanguage]);
 
   return (
     <Dropdown className={className}>
@@ -43,6 +49,7 @@ export default function LanguageSelector({
             background: "transparent",
             border: "none",
             padding: "0.25rem 0.5rem",
+            textDecoration: "none",
           }),
         }}
       >
@@ -53,18 +60,18 @@ export default function LanguageSelector({
       </Dropdown.Toggle>
       <Dropdown.Menu align="end">
         {supportedLanguages.map((language) => (
-            <Dropdown.Item
-                key={language.code}
-                active={selectedLanguage === language.code}
-                onClick={() => handleLanguageChange(language.code)}
-                className="d-flex align-items-center gap-2"
-            >
-                <span style={{ fontSize: '1.1em' }}>{language.flag}</span>
-                <div>
-                    <div className="fw-bold">{language.nativeName}</div>
-                    <small className="text-muted">{language.name}</small>
-                </div>
-            </Dropdown.Item>
+          <Dropdown.Item
+            key={language.code}
+            active={selectedLanguage === language.code}
+            onClick={() => handleLanguageChange(language.code)}
+            className="d-flex align-items-center gap-2"
+          >
+            <span style={{ fontSize: "1.1em" }}>{language.flag}</span>
+            <div>
+              <div className="fw-bold">{language.nativeName}</div>
+              <small className="text-muted">{language.name}</small>
+            </div>
+          </Dropdown.Item>
         ))}
       </Dropdown.Menu>
     </Dropdown>

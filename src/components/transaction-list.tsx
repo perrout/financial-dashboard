@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Alert, Button, Spinner, Table } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { MOCK_TRANSACTIONS } from "../mocks";
 import type { Transaction } from "../models/transaction";
 import { formatCurrency, formatDate } from "../utils";
@@ -13,6 +14,7 @@ export default function TransactionList({
   onEditTransaction,
   className = "",
 }: TransactionListProps) {
+  const { t } = useTranslation();
   const [transactions, setTransactions] =
     useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [loading, setLoading] = useState(false);
@@ -40,7 +42,9 @@ export default function TransactionList({
     <tr key={transaction.id}>
       <td>
         <div className="fw-bold">{transaction.description}</div>
-        <small className="text-muted">{formatDate(transaction.date.toISOString())}</small>
+        <small className="text-muted">
+          {formatDate(transaction.date.toISOString())}
+        </small>
       </td>
       <td className="text-end">
         <div className="fw-bold text-success">
@@ -59,7 +63,7 @@ export default function TransactionList({
               onClick={() => onEditTransaction(transaction)}
               disabled={loading}
             >
-              Edit
+              {t("common.edit")}
             </Button>
           )}
           <Button
@@ -68,7 +72,7 @@ export default function TransactionList({
             onClick={() => handleDeleteTransaction(transaction.id)}
             disabled={loading}
           >
-            Delete
+            {t("common.delete")}
           </Button>
         </div>
       </td>
@@ -79,9 +83,9 @@ export default function TransactionList({
     return (
       <div className="text-center py-4">
         <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
+          <span className="visually-hidden">{t("common.loading")}</span>
         </Spinner>
-        <div className="mt-2">Loading...</div>
+        <div className="mt-2">{t("common.loading")}</div>
       </div>
     );
   }
@@ -89,7 +93,7 @@ export default function TransactionList({
   if (error) {
     return (
       <Alert variant="danger">
-        <Alert.Heading>Error</Alert.Heading>
+        <Alert.Heading>{t("common.error")}</Alert.Heading>
         <p>{error}</p>
       </Alert>
     );
@@ -98,10 +102,8 @@ export default function TransactionList({
   if (transactions.length === 0) {
     return (
       <Alert variant="info">
-        <Alert.Heading>No transaction</Alert.Heading>
-        <p className="mb-0">
-          Add your first transaction to start using the dashboard.
-        </p>
+        <Alert.Heading>{t("transaction.empty")}</Alert.Heading>
+        <p className="mb-0">{t("transaction.emptyDescription")}</p>
       </Alert>
     );
   }
@@ -112,9 +114,9 @@ export default function TransactionList({
         <Table hover>
           <thead>
             <tr>
-              <th>Description</th>
-              <th className="text-end">Value</th>
-              <th style={{ width: "150px" }}>Actions</th>
+              <th>{t("transaction.description")}</th>
+              <th className="text-end">{t("transaction.amount")}</th>
+              <th style={{ width: "150px" }}>{t("common.actions")}</th>
             </tr>
           </thead>
           <tbody>{transactions.map(renderTransaction)}</tbody>
@@ -123,7 +125,7 @@ export default function TransactionList({
       {loading && (
         <div className="text-center py-2">
           <Spinner size="sm" animation="border" />
-          <span className="ms-2">Loading...</span>
+          <span className="ms-2">{t("common.loading")}</span>
         </div>
       )}
     </div>

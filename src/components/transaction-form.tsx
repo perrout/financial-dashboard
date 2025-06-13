@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../store/app-store";
 import { formatISODate } from "../utils";
 
@@ -28,8 +29,9 @@ export default function TransactionForm({
   onCancel,
   className = "",
 }: TransactionFormProps) {
+  const { t } = useTranslation();
   const { selectedCountry } = useAppStore();
-  
+
   const [formData, setFormData] = useState<FormData>({
     description: "",
     amount: "",
@@ -43,19 +45,19 @@ export default function TransactionForm({
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
     if (!formData.amount || Number.parseFloat(formData.amount) <= 0) {
-      newErrors.amount = "Valor inválido";
+      newErrors.amount = t("form.invalidAmount");
     }
     if (!formData.currency) {
-      newErrors.currency = "Currency is required";
+      newErrors.currency = t("form.required");
     } else if (!selectedCountry.supportsCurrency(formData.currency)) {
-      newErrors.currency = "Currency not supported";
+      newErrors.currency = t("form.invalidCurrency");
     }
     if (!formData.date) {
-      newErrors.date = "Date is required";
+      newErrors.date = t("form.required");
     } else {
       const date = new Date(formData.date);
       if (Number.isNaN(date.getTime())) {
-        newErrors.date = "Invalid date";
+        newErrors.date = t("form.invalidDate");
       }
     }
     setErrors(newErrors);
@@ -84,23 +86,28 @@ export default function TransactionForm({
       if (!validateForm()) return;
       setLoading(true);
       setError(null);
-      try {
-        const success = await createTransaction(formData);
-        if (success) {
-          setFormData({
-            description: "",
-            amount: "",
-            currency: selectedCountry.primaryCurrency.code,
-            date: formatISODate(new Date()),
+
+      setTimeout(async () => {
+        try {
+          const success = await createTransaction(formData);
+          if (success) {
+            setFormData({
+              description: "",
+              amount: "",
+              currency: selectedCountry.primaryCurrency.code,
+              date: formatISODate(new Date()),
+            });
+            setErrors({});
+            if (onSuccess) onSuccess();
+          }
+        } catch (err) {
+          setErrors({
+            general: err instanceof Error ? err.message : t("common.error"),
           });
-          setErrors({});
-          if (onSuccess) onSuccess();
+        } finally {
+          setLoading(false);
         }
-      } catch (err) {
-        setError("Error creating transaction");
-      } finally {
-        setLoading(false);
-      }
+      }, 3000);
     },
     [formData, validateForm, onSuccess],
   );
@@ -113,9 +120,8 @@ export default function TransactionForm({
 
   const createTransaction = async (formData: FormData): Promise<boolean> => {
     console.log("createTransaction", formData);
-    // No mock, sempre retorna sucesso
     return Promise.resolve(true);
-  }
+  };
 
   return (
     <Form onSubmit={handleSubmit} className={className}>
@@ -127,11 +133,13 @@ export default function TransactionForm({
       <Row>
         <Col md={12}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="description">Description</Form.Label>
+            <Form.Label htmlFor="description">
+              {t("transaction.description")}
+            </Form.Label>
             <Form.Control
               id="description"
               type="text"
-              placeholder="Description of the transaction"
+              placeholder={t("form.descriptionPlaceholder")}
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
               disabled={loading}
@@ -143,14 +151,14 @@ export default function TransactionForm({
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="amount">
-              Amount <span className="text-danger">*</span>
+              {t("transaction.amount")} <span className="text-danger">*</span>
             </Form.Label>
             <Form.Control
               id="amount"
               type="number"
               step="0.01"
               min="0.01"
-              placeholder="0,00"
+              placeholder={t("form.amountPlaceholder")}
               value={formData.amount}
               onChange={(e) => handleInputChange("amount", e.target.value)}
               disabled={loading}
@@ -163,7 +171,7 @@ export default function TransactionForm({
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="currency">
-              Currency <span className="text-danger">*</span>
+              {t("transaction.currency")} <span className="text-danger">*</span>
             </Form.Label>
             <Form.Select
               id="currency"
@@ -173,7 +181,7 @@ export default function TransactionForm({
               isInvalid={!!errors.currency}
               required
             >
-              <option value="">Select the currency</option>
+              <option value="">{t("form.selectCurrency")}</option>
               {selectedCountry.currencies.map((currency) => (
                 <option key={currency.code} value={currency.code}>
                   {currency.code} - {currency.symbol} {currency.name}
@@ -188,7 +196,7 @@ export default function TransactionForm({
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="date">
-              Date <span className="text-danger">*</span>
+              {t("transaction.date")} <span className="text-danger">*</span>
             </Form.Label>
             <Form.Control
               id="date"
@@ -204,7 +212,7 @@ export default function TransactionForm({
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label>País</Form.Label>
+            <Form.Label>{t("transaction.country")}</Form.Label>
             <Form.Control
               type="text"
               value={`${selectedCountry.flag} ${selectedCountry.name}`}
@@ -221,7 +229,7 @@ export default function TransactionForm({
             onClick={onCancel}
             disabled={loading}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
         )}
         <Button type="submit" variant="primary" disabled={loading}>
@@ -235,10 +243,10 @@ export default function TransactionForm({
                 aria-hidden="true"
                 className="me-2"
               />
-              Saving...
+              {t("common.saving")}
             </>
           ) : (
-            "Save"
+            t("common.save")
           )}
         </Button>
       </div>

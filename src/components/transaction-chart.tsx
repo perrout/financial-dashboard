@@ -11,14 +11,10 @@ import {
 import { useMemo } from "react";
 import { Alert, Spinner } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
-import {
-  MOCK_ERROR,
-  MOCK_LOADING,
-  MOCK_TRANSACTIONS,
-  selectedCountry,
-} from "../mocks";
+import { MOCK_ERROR, MOCK_LOADING, MOCK_TRANSACTIONS } from "../mocks";
 import { calculateDailySummary } from "../utils";
 
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../store/app-store";
 import { formatCurrency } from "../utils";
 
@@ -44,6 +40,7 @@ export default function TransactionChart({
   height = 300,
   className = "",
 }: TransactionChartProps) {
+  const { t } = useTranslation();
   const { selectedCountry } = useAppStore();
 
   const dailySummary = calculateDailySummary(MOCK_TRANSACTIONS);
@@ -64,7 +61,7 @@ export default function TransactionChart({
       }),
       datasets: [
         {
-          label: "Daily Volume",
+          label: t("chart.dailyVolume"),
           data: dailySummary.map((item) => item.totalAmount),
           backgroundColor: `${CHART_COLORS.primary}80`,
           borderColor: CHART_COLORS.primary,
@@ -87,20 +84,22 @@ export default function TransactionChart({
         },
         title: {
           display: true,
-          text: `Volume diário - ${selectedCountry.flag} ${selectedCountry.name}`,
+          text: `${t("chart.dailyVolumeDescription", { country: selectedCountry.flag + " " + selectedCountry.name })}`,
           font: { size: 16, weight: "bold" as const },
         },
         tooltip: {
           callbacks: {
             label: (context: TooltipItem<"bar">) => {
               const value = context.parsed.y;
-              return `Value: ${formatCurrency(value, selectedCountry.primaryCurrency.code)}`;
+              return formatCurrency(value, selectedCountry.primaryCurrency.code);
             },
             afterLabel: (context: TooltipItem<"bar">) => {
               const dataIndex = context.dataIndex;
               const dayData = dailySummary?.[dataIndex];
               if (dayData) {
-                return `Transactions: ${dayData.transactionCount}`;
+                return dayData.transactionCount > 1
+                  ? t("transaction.countPlural", { count: dayData.transactionCount })
+                  : t("transaction.countSingular", { count: dayData.transactionCount });
               }
               return "";
             },
@@ -111,7 +110,7 @@ export default function TransactionChart({
         x: {
           title: {
             display: true,
-            text: "Data",
+            text: t("transaction.date"),
             font: { size: 12, weight: "bold" as const },
           },
           ticks: { maxRotation: 45, minRotation: 0 },
@@ -120,7 +119,7 @@ export default function TransactionChart({
           beginAtZero: true,
           title: {
             display: true,
-            text: "Value",
+            text: t("transaction.amount"),
             font: { size: 12, weight: "bold" as const },
           },
           ticks: {
@@ -146,9 +145,9 @@ export default function TransactionChart({
       >
         <div className="text-center">
           <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">{t("common.loading")}</span>
           </Spinner>
-          <div className="mt-2">Loading...</div>
+          <div className="mt-2">{t("common.loading")}</div>
         </div>
       </div>
     );
@@ -157,7 +156,7 @@ export default function TransactionChart({
   if (error) {
     return (
       <Alert variant="danger">
-        <Alert.Heading>Error</Alert.Heading>
+        <Alert.Heading>{t("common.error")}</Alert.Heading>
         <p>{error}</p>
       </Alert>
     );
@@ -173,8 +172,8 @@ export default function TransactionChart({
           <div className="mb-2">
             <i className="bi bi-bar-chart" style={{ fontSize: "3rem" }} />
           </div>
-          <h5>No data</h5>
-          <p className="mb-0">Add transactions to visualize the chart</p>
+          <h5>{t("chart.empty")}</h5>
+          <p className="mb-0">{t("common.addTransactionsToVisualizeChart")}</p>
         </div>
       </div>
     );

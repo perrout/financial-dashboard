@@ -62,7 +62,8 @@ export class Country {
   }
 
   supportsCurrency(currencyCode: string): boolean {
-    return this.props.currencies.some(currency => currency.code === currencyCode)
-}
-
+    return this.props.currencies.some(
+      (currency) => currency.code === currencyCode,
+    );
+  }
 }

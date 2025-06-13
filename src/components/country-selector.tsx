@@ -1,4 +1,5 @@
 import { Dropdown } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { Country } from "../models/country";
 import { useAppStore } from "../store/app-store";
 
@@ -14,13 +15,11 @@ export default function CountrySelector({
   size,
   className = "",
 }: CountrySelectorProps) {
-  const { 
-    selectedCountry, 
-    setSelectedCountry, 
-    getAvailableCountries 
-  } = useAppStore();
+  const { t } = useTranslation();
+  const { selectedCountry, setSelectedCountry, getAvailableCountries } =
+    useAppStore();
 
-  const availableCountries = getAvailableCountries()
+  const availableCountries = getAvailableCountries();
 
   const handleCountryChange = (country: Country) => {
     console.log("country", country);
@@ -38,8 +37,9 @@ export default function CountrySelector({
         <span style={{ fontSize: "1.2em" }}>{selectedCountry.flag}</span>
         <span>{selectedCountry.name}</span>
       </Dropdown.Toggle>
+
       <Dropdown.Menu>
-        <Dropdown.Header>Selecione o país</Dropdown.Header>
+        <Dropdown.Header>{t("dashboard.selectCountry")}</Dropdown.Header>
         <Dropdown.Divider />
 
         {availableCountries.map((country: Country) => (

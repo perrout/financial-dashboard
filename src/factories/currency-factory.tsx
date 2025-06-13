@@ -7,29 +7,28 @@ export interface CurrencyData {
 }
 
 export class CurrencyFactory {
-  private static readonly DEFAULT_CURRENCIES: Record<string, CurrencyData> =
-    {
-      BRL: {
-        code: "BRL",
-        name: "Real Brasileiro",
-        symbol: "R$",
-      },
-      COP: {
-        code: "COP",
-        name: "Peso Colombiano",
-        symbol: "$",
-      },
-      USD: {
-        code: "USD",
-        name: "Dólar Americano",
-        symbol: "$",
-      },
-      EUR: {
-        code: "EUR",
-        name: "Euro",
-        symbol: "€",
-      },
-    };
+  private static readonly DEFAULT_CURRENCIES: Record<string, CurrencyData> = {
+    BRL: {
+      code: "BRL",
+      name: "Real Brasileiro",
+      symbol: "R$",
+    },
+    COP: {
+      code: "COP",
+      name: "Peso Colombiano",
+      symbol: "$",
+    },
+    USD: {
+      code: "USD",
+      name: "Dólar Americano",
+      symbol: "$",
+    },
+    EUR: {
+      code: "EUR",
+      name: "Euro",
+      symbol: "€",
+    },
+  };
 
   static createFromCode(code: string): Currency {
     const currencyData = this.DEFAULT_CURRENCIES[code];

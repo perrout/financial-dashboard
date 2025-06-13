@@ -1,0 +1,85 @@
+{
+  "common": {
+    "actions": "Acciones",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "select": "Seleccionar",
+    "clear": "Limpiar"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Dashboard Financiero para {{country}}",
+    "selectCountry": "Seleccionar País",
+    "totalBalance": "Saldo Total",
+    "dailyTransactions": "Transacciones Diarias",
+    "recentTransactions": "Transacciones Recientes",
+    "noTransactions": "No se encontraron transacciones",
+    "addTransaction": "Agregar Transacción",
+    "availableCurrencies": "Monedas Disponibles",
+    "currencyRates": "Tasas de Cambio",
+    "editTransaction": "Editar Transacción",
+    "createTransaction": "Crear Transacción",
+    "footer": "SmartFastPay © {{year}} • Todos los derechos reservados"
+  },
+  "transaction": {
+    "create": "Crear Transacción",
+    "edit": "Editar Transacción",
+    "delete": "Eliminar Transacción",
+    "created": "Transacción creada exitosamente",
+    "deleted": "Transacción eliminada exitosamente",
+    "updated": "Transacción actualizada exitosamente",
+    "confirmDelete": "¿Está seguro de que desea eliminar esta transacción?",
+    "empty": "No se encontraron transacciones",
+    "emptyDescription": "Agrega tu primera transacción para empezar a usar el dashboard.",
+    "errorCreating": "Error al crear la transacción",
+    "errorDeleting": "Error al eliminar la transacción",
+    "errorUpdating": "Error al actualizar la transacción",
+    "actions": "Acciones",
+    "amount": "Monto",
+    "description": "Descripción",
+    "currency": "Moneda",
+    "date": "Fecha",
+    "country": "País",
+    "countSingular": "{{count}} transacción",
+    "countPlural": "{{count}} transacciones"
+  },
+  "form": {
+    "required": "Campo requerido",
+    "invalidAmount": "El monto debe ser un número positivo",
+    "invalidDate": "Fecha inválida",
+    "invalidCurrency": "Moneda inválida",
+    "descriptionPlaceholder": "Ingrese una descripción (opcional)",
+    "amountPlaceholder": "0.00",
+    "selectCurrency": "Seleccione una moneda",
+    "selectDate": "Seleccione una fecha"
+  },
+  "chart": {
+    "dailyVolume": "Volumen Diario",
+    "dailyVolumeDescription": "Volumen diario para {{country}}",
+    "transactionAmount": "Monto de Transacciones",
+    "empty": "No hay datos disponibles",
+    "emptyDescription": "Agrega transacciones para visualizar el gráfico.",
+    "totalTransactions": "Total de Transacciones"
+  },
+  "countries": {
+    "BR": "Brasil",
+    "CO": "Colombia",
+    "US": "Estados Unidos"
+  },
+  "currencies": {
+    "BRL": "Real Brasileño",
+    "COP": "Peso Colombiano",
+    "USD": "Dólar Americano"
+  }
+}
