@@ -3,6 +3,7 @@ import type { Country } from "../models/country"
 import type { Currency } from "../models/currency"
 import { format } from "date-fns"
 import { MockTransactionApi } from "../mocks/mock-transaction-api"
+import { FormatterService } from "./formatter-service"
 
 export interface DailyTransactionSummary {
   date: string
@@ -183,7 +184,7 @@ export class TransactionService {
     >()
 
     for (const transaction of transactions) {
-      const dateKey = format(transaction.date, "yyyy-MM-dd")
+      const dateKey = FormatterService.formatISODate(transaction.date)
       const existing = dailyMap.get(dateKey)
 
       if (existing) {

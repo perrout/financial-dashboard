@@ -1,7 +1,7 @@
 import { Alert, Button, Spinner, Table } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
 import type { Transaction } from "../models/transaction"
-import { formatCurrency, formatDate } from "../utils"
+import { useAppStore } from "../store/app-store"
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -21,6 +21,7 @@ export default function TransactionList({
   className = "",
 }: TransactionListProps) {
   const { t } = useTranslation()
+  const { formatterService } = useAppStore()
 
   const handleDeleteTransaction = async (id: string) => {
     if (window.confirm(t("transaction.confirmDelete"))) {
@@ -39,12 +40,16 @@ export default function TransactionList({
           )}
         </div>
         <small className="text-muted">
-          {formatDate(transaction.date.toISOString())}
+          {formatterService.formatDate(transaction.date, transaction.country)}
         </small>
       </td>
       <td className="text-end align-middle">
         <div className="fw-bold text-success">
-          {formatCurrency(transaction.amount, transaction.currency.code)}
+          {formatterService.formatCurrency(
+            transaction.amount,
+            transaction.currency,
+            transaction.country
+          )}
         </div>
       </td>
       <td className="align-middle">
@@ -72,7 +77,7 @@ export default function TransactionList({
     </tr>
   )
 
-  if (loading && transactions.length === 0) {
+  if (loading) {
     return (
       <div className="text-center py-4">
         <Spinner animation="border" as="output">

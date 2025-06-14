@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
-import { formatCurrency } from "../utils"
 import { Alert } from "react-bootstrap"
 import { Spinner } from "react-bootstrap"
 import type { CountryBalance as CountryBalanceType } from "../services/transaction-service"
+import { useAppStore } from "../store/app-store"
 
 interface CountryBalanceComponentProps {
   countryBalance: CountryBalanceType | null
@@ -16,8 +16,9 @@ export default function CountryBalance({
   error,
 }: CountryBalanceComponentProps) {
   const { t } = useTranslation()
+  const { selectedCountry, formatterService } = useAppStore()
 
-  if (loading && !countryBalance) {
+  if (loading) {
     return (
       <div className="text-center py-4">
         <Spinner animation="border" as="output">
@@ -66,7 +67,11 @@ export default function CountryBalance({
           </div>
           <div className="text-end">
             <div className="fw-bold text-success">
-              {formatCurrency(balance.amount, balance.currency.code)}
+              {formatterService.formatCurrency(
+                balance.amount,
+                balance.currency,
+                selectedCountry
+              )}
             </div>
           </div>
         </div>

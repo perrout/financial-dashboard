@@ -3,15 +3,21 @@ import type { Transaction } from "../models/transaction"
 import type {
   DailyTransactionSummary,
   CountryBalance,
+  TransactionService,
 } from "../services/transaction-service"
 import { useTransactionStore } from "../store/transaction-store"
 import { useAppStore } from "../store/app-store"
+import type { FormatterService } from "../services/formatter-service"
 
 export interface UseTransactionsResult {
   // State
   transactions: Transaction[]
   loading: boolean
   error: string | null
+
+  // Services
+  formatterService: FormatterService
+  transactionService: TransactionService
 
   // Actions
   createTransaction: (formData: {
@@ -42,11 +48,11 @@ export interface UseTransactionsResult {
 }
 
 export const useTransactions = (): UseTransactionsResult => {
-  const { selectedCountry } = useAppStore()
+  const { selectedCountry, formatterService } = useAppStore()
 
   // Extract specific functions and state from store to avoid circular dependencies
   const {
-    transactions: storeTransactions,
+    transactions,
     loading: storeLoading,
     error,
     addTransaction,
@@ -54,7 +60,6 @@ export const useTransactions = (): UseTransactionsResult => {
     removeTransaction,
     fetchTransactions,
     clearError,
-    getTransactionsByCountry,
     transactionService,
   } = useTransactionStore()
 
@@ -65,12 +70,6 @@ export const useTransactions = (): UseTransactionsResult => {
     null
   )
   const [summaryLoading, setSummaryLoading] = useState(false)
-
-  // Filtered transactions for current country - memoized to prevent recalculation
-  const transactions = useMemo(() => {
-    console.log("transactions", storeTransactions)
-    return getTransactionsByCountry(selectedCountry.code)
-  }, [storeTransactions, selectedCountry.code, getTransactionsByCountry])
 
   // Load data when country changes
   useEffect(() => {
@@ -87,6 +86,10 @@ export const useTransactions = (): UseTransactionsResult => {
 
     setSummaryLoading(true)
     try {
+      // const [summary, balance] = await Promise.all([
+      //   getDailySummary(selectedCountry.code),
+      //   getCountryBalance(selectedCountry.code),
+      // ])
       const summary = transactionService.calculateDailySummary(transactions)
       const balance = transactionService.calculateCountryBalance(transactions)
 
@@ -159,6 +162,10 @@ export const useTransactions = (): UseTransactionsResult => {
     dailySummary,
     countryBalance,
     totalTransactions: transactions.length,
+
+    // Services
+    formatterService,
+    transactionService,
   }
 }
 

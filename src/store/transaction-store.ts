@@ -93,7 +93,7 @@ export const useTransactionStore = create<TransactionState>()(
           try {
             const transactions = countryCode
               ? await transactionService.getTransactionsByCountry(countryCode)
-              : await transactionService.getAllTransactions()
+              : []
             set({
               transactions,
               loading: false,

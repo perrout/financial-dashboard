@@ -1,5 +1,6 @@
 import type { Country } from "../models/country"
 import { Transaction } from "../models/transaction"
+import { FormatterService } from "../services/formatter-service"
 import { CountryFactory, type CountryCode } from "./country-factory"
 import { CurrencyFactory } from "./currency-factory"
 
@@ -24,7 +25,9 @@ export interface TransactionData {
 export const TransactionFactory = {
   createFromData(data: CreateTransactionData): Transaction {
     const currency = CurrencyFactory.createFromCode(data.currencyCode)
-    const country = CountryFactory.createFromCode(data.countryCode)
+    const country = CountryFactory.createFromCode(
+      data.countryCode as CountryCode
+    )
     const date = typeof data.date === "string" ? new Date(data.date) : data.date
 
     return Transaction.create({
@@ -92,42 +95,42 @@ export const TransactionFactory = {
         description: "Compra supermercado",
         amount: 250.75,
         currency: brl,
-        date: new Date("2025-06-12"),
+        date: FormatterService.parseISODate("2025-06-12"),
         country: brazil,
       }),
       Transaction.create({
         description: "Freelance web development",
         amount: 1500.0,
         currency: brl,
-        date: new Date("2025-06-11"),
+        date: FormatterService.parseISODate("2025-06-11"),
         country: brazil,
       }),
       Transaction.create({
         description: "Almuerzo restaurante",
         amount: 85000,
         currency: cop,
-        date: new Date("2025-06-11"),
+        date: FormatterService.parseISODate("2025-06-11"),
         country: colombia,
       }),
       Transaction.create({
         description: "Salary payment",
         amount: 3500.0,
         currency: usd,
-        date: new Date("2025-06-10"),
+        date: FormatterService.parseISODate("2025-06-10"),
         country: brazil,
       }),
       Transaction.create({
         description: "Consultoría técnica",
         amount: 450000,
         currency: cop,
-        date: new Date("2025-06-09"),
+        date: FormatterService.parseISODate("2025-06-09"),
         country: colombia,
       }),
       Transaction.create({
         description: "Consultoría técnica",
         amount: 100000,
         currency: brl,
-        date: new Date("2025-06-08"),
+        date: FormatterService.parseISODate("2025-06-08"),
         country: brazil,
       }),
     ]

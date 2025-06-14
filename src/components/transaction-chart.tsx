@@ -11,10 +11,8 @@ import {
 import { useMemo } from "react"
 import { Alert, Spinner } from "react-bootstrap"
 import { Bar } from "react-chartjs-2"
-
 import { useTranslation } from "react-i18next"
 import { useAppStore } from "../store/app-store"
-import { formatCurrency } from "../utils"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -40,7 +38,7 @@ export default function TransactionChart({
   error,
 }: TransactionChartProps) {
   const { t } = useTranslation()
-  const { selectedCountry } = useAppStore()
+  const { selectedCountry, formatterService } = useAppStore()
   const hasDailySummary = dailySummary && dailySummary.length > 0
 
   const chartData = useMemo(() => {
@@ -49,11 +47,7 @@ export default function TransactionChart({
     }
     return {
       labels: dailySummary.map(item => {
-        const date = new Date(item.date)
-        return date.toLocaleDateString("pt-BR", {
-          day: "2-digit",
-          month: "2-digit",
-        })
+        return formatterService.formatDayMonth(item.date, selectedCountry)
       }),
       datasets: [
         {
@@ -67,7 +61,7 @@ export default function TransactionChart({
         },
       ],
     }
-  }, [dailySummary, t])
+  }, [dailySummary, t, formatterService, selectedCountry])
 
   const chartOptions = useMemo(
     () => ({
@@ -87,7 +81,11 @@ export default function TransactionChart({
           callbacks: {
             label: (context: TooltipItem<"bar">) => {
               const value = context.parsed.y
-              return formatCurrency(value, selectedCountry.primaryCurrency.code)
+              return formatterService.formatCurrency(
+                value,
+                selectedCountry.primaryCurrency,
+                selectedCountry
+              )
             },
             afterLabel: (context: TooltipItem<"bar">) => {
               const dataIndex = context.dataIndex
@@ -124,9 +122,10 @@ export default function TransactionChart({
           },
           ticks: {
             callback: (value: string | number) =>
-              formatCurrency(
+              formatterService.formatCurrency(
                 Number(value),
-                selectedCountry.primaryCurrency.code
+                selectedCountry.primaryCurrency,
+                selectedCountry
               ),
           },
         },
@@ -139,11 +138,13 @@ export default function TransactionChart({
       t,
       selectedCountry.flag,
       selectedCountry.name,
-      selectedCountry.primaryCurrency.code,
+      formatterService,
+      selectedCountry,
+      selectedCountry.primaryCurrency,
     ]
   )
 
-  if (loading && !hasDailySummary) {
+  if (loading) {
     return (
       <div
         className="d-flex justify-content-center align-items-center"

@@ -2,7 +2,6 @@ import { useCallback, useState, useEffect } from "react"
 import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
 import { useAppStore } from "../store/app-store"
-import { formatISODate } from "../utils"
 import type { Transaction } from "../models/transaction"
 
 export interface FormData {
@@ -46,15 +45,26 @@ export default function TransactionForm({
   clearError,
 }: TransactionFormProps) {
   const { t } = useTranslation()
-  const { selectedCountry } = useAppStore()
-
-  const [formData, setFormData] = useState<FormData>({
+  const { selectedCountry, formatterService } = useAppStore()
+  const emptyFormData = {
     description: "",
     amount: "",
     currency: selectedCountry.primaryCurrency.code,
-    date: formatISODate(new Date()),
-  })
+    date: formatterService.formatDate(new Date(), selectedCountry),
+  }
+
+  const [formData, setFormData] = useState<FormData>(emptyFormData)
   const [errors, setErrors] = useState<FormErrors>({})
+
+  const clearFormData = useCallback(() => {
+    setFormData({
+      description: "",
+      amount: "",
+      currency: selectedCountry.primaryCurrency.code,
+      date: formatterService.formatDate(new Date(), selectedCountry),
+    })
+    setErrors({})
+  }, [selectedCountry, formatterService])
 
   useEffect(() => {
     if (transaction) {
@@ -65,24 +75,13 @@ export default function TransactionForm({
           typeof transaction.currency === "string"
             ? transaction.currency
             : transaction.currency.code,
-        date: transaction.date
-          ? formatISODate(
-              typeof transaction.date === "string"
-                ? new Date(transaction.date)
-                : transaction.date
-            )
-          : formatISODate(new Date()),
+        date: formatterService.formatDate(transaction.date, selectedCountry),
       })
     } else {
-      setFormData({
-        description: "",
-        amount: "",
-        currency: selectedCountry.primaryCurrency.code,
-        date: formatISODate(new Date()),
-      })
+      clearFormData()
     }
     setErrors({})
-  }, [transaction, selectedCountry.primaryCurrency.code])
+  }, [transaction, clearFormData, formatterService, selectedCountry])
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {}
@@ -149,12 +148,7 @@ export default function TransactionForm({
         }
 
         if (success) {
-          setFormData({
-            description: "",
-            amount: "",
-            currency: selectedCountry.primaryCurrency.code,
-            date: formatISODate(new Date()),
-          })
+          setFormData(emptyFormData)
           setErrors({})
 
           if (onSuccess) {

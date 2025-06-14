@@ -2,6 +2,7 @@ import { create } from "zustand"
 import { devtools, persist } from "zustand/middleware"
 import { type CountryCode, CountryFactory } from "../factories/country-factory"
 import type { Country } from "../models/country"
+import { FormatterService } from "../services/formatter-service"
 
 const LANGUAGE_OPTIONS = [
   {
@@ -31,6 +32,9 @@ export interface AppStore {
   selectedCountry: Country
   selectedLanguage: SupportedLanguage
 
+  // Services
+  formatterService: FormatterService
+
   // Actions
   setSelectedCountry: (country: Country) => void
   setSelectedCountryByCode: (code: string) => void
@@ -53,6 +57,9 @@ export const useAppStore = create<AppStore>()(
         // Initial state
         selectedCountry: CountryFactory.createBrazil(),
         selectedLanguage: "pt",
+
+        // Services
+        formatterService: new FormatterService(),
 
         // Actions
         setSelectedCountry: country => {
