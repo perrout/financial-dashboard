@@ -66,8 +66,17 @@ src/
 
 - **Node.js** 22+
 - **pnpm** 9+
+- **Extensão do Biome para o VS Code** (https://marketplace.visualstudio.com/items?itemName=biomejs.biome)
 
 ### Instalação e Execução
+Para rodar o dashboard localmente na sua máquina é muito simples:
+
+1. Intale a extensão do biome no seu editor.
+
+![biome](./public/biome.png)
+> A extensão é necessária pois utilizei o biomejs como linter, então para que as formatações ocorram quando salvar arquivos, é necessário instalar a extensão.
+
+2. Baixe, instale as dependência e rode
 
 ```bash
 # Clonar o repositório
