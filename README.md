@@ -99,7 +99,7 @@ pnpm preview
 pnpm test
 
 # Testes em modo watch
-pnpm test:watch
+pnpm test:ui
 
 # Gerar relatório de cobertura
 pnpm test:coverage
