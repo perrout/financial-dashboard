@@ -118,6 +118,22 @@ pnpm test:coverage
 
 ---
 
+## 📢 Publicando no GitHub Pages
+
+Para publicar o dashboard no GitHub Pages:
+
+1. Faça o deploy para o GitHub Pages:
+   ```bash
+   pnpm run deploy
+   ```
+   > O script já está configurado para rodar o build automaticamente antes do deploy.
+
+2. Acesse sua aplicação publicada em:
+   [https://perrout.github.io/financial-dashboard/](https://perrout.github.io/financial-dashboard/)
+
+
+---
+
 ## 📊 Qualidade e Convenções
 
 - **TypeScript Strict Mode** habilitado
@@ -157,24 +173,3 @@ Contribuições são bem-vindas! Siga as convenções do projeto e abra um Pull 
 Dúvidas? Sugestões? Abra uma issue!
 
 ---
-
-## 📢 Publicando no GitHub Pages
-
-Para publicar o dashboard no GitHub Pages:
-
-1. Gere o build de produção:
-   ```bash
-   pnpm build
-   ```
-2. Faça o deploy para o GitHub Pages:
-   ```bash
-   pnpm deploy
-   ```
-   > O script já está configurado para rodar o build automaticamente antes do deploy.
-
-3. Acesse sua aplicação publicada em:
-   [https://perrout.github.io/financial-dashboard/](https://perrout.github.io/financial-dashboard/)
-
-> **Importante:**
-> - Certifique-se de que o script `predeploy` no `package.json` está como `pnpm run build` para evitar erros de ambiente.
-> - Não utilize `npm run deploy` se estiver padronizando o uso do pnpm no projeto.
