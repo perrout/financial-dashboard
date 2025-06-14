@@ -58,7 +58,7 @@ export class TransactionService {
       description: formData.description,
       amount: Number.parseFloat(formData.amount),
       currencyCode: formData.currency,
-      date: formData.date,
+      date: FormatterService.parseISODate(formData.date),
       countryCode: country.code,
     })
   }

@@ -137,13 +137,13 @@ export default function TransactionForm({
             description: formData.description,
             amount: formData.amount,
             currency: formData.currency,
-            date: `${formData.date}T00:00:00Z`,
+            date: formData.date,
           })
         } else {
           success = await createTransaction({
             ...formData,
             currency: formData.currency,
-            date: `${formData.date}T00:00:00Z`,
+            date: formData.date,
           })
         }
 

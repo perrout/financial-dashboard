@@ -200,6 +200,17 @@ export class FormatterService {
     return format(d, "yyyy-MM-dd")
   }
 
+  formatISODate(date: Date | string): string {
+    if (typeof date === "string") {
+      return format(parseISO(date), "yyyy-MM-dd")
+    }
+    return format(date, "yyyy-MM-dd")
+  }
+
+  parseISODate(dateString: string): Date {
+    return parseISO(dateString)
+  }
+
   private getLocale(country: Country): string {
     switch (country.code) {
       case "BR":
