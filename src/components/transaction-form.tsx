@@ -148,7 +148,7 @@ export default function TransactionForm({
         }
 
         if (success) {
-          setFormData(emptyFormData)
+          clearFormData()
           setErrors({})
 
           if (onSuccess) {
@@ -167,7 +167,7 @@ export default function TransactionForm({
       createTransaction,
       updateTransaction,
       transaction,
-      selectedCountry,
+      clearFormData,
       onSuccess,
       t,
     ]
