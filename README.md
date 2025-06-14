@@ -1,54 +1,146 @@
-# React + TypeScript + Vite
+# 💰 Financial - Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dashboard financeiro moderno, responsivo e multi-país, desenvolvido com **React 19**, **TypeScript** e **Vite**. Estruturado com Clean Architecture, foco em escalabilidade, qualidade e experiência do usuário.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Destaques
 
-## Expanding the ESLint configuration
+- **Clean Architecture**: Separação clara de responsabilidades e camadas.
+- **Padrões de Projeto**: Factory, Strategy, Repository, Dependency Inversion.
+- **Internacionalização**: Suporte a múltiplos idiomas e países.
+- **UI/UX Moderna**: Design responsivo, temas adaptativos, acessibilidade.
+- **Testes Automatizados**: Cobertura de componentes, hooks e stores.
+- **Qualidade de Código**: TypeScript estrito, ESLint/Biome, Prettier.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🛠️ Tecnologias Principais
+
+- **React 19** & **TypeScript 5.8**
+- **Vite 6** (build e dev server ultrarrápido)
+- **Zustand** (estado global)
+- **React Bootstrap** & **Bootstrap 5** (UI)
+- **Chart.js** & **react-chartjs-2** (gráficos)
+- **i18next** (internacionalização)
+- **Vitest** & **Testing Library** (testes)
+- **Biome** (lint e formatação)
+
+---
+
+## 📁 Estrutura de Pastas
+
+```
+src/
+├── components/   # Componentes React reutilizáveis
+├── factories/    # Implementação do Factory Pattern
+├── hooks/        # Hooks customizados
+├── languages/    # Configurações de idiomas
+├── layouts/      # Layouts de página
+├── mocks/        # Mocks e setup de testes
+├── models/       # Modelos de domínio (TypeScript)
+├── pages/        # Páginas da aplicação
+├── services/     # Serviços de domínio e integrações
+├── store/        # Estado global (Zustand)
+├── tests/        # Testes unitários e utilitários
+├── main.tsx      # Entry point da aplicação
+├── App.tsx       # Componente raiz
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🌍 Funcionalidades
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+- Multi-país e multi-idioma
+- Criação e listagem de transações financeiras
+- Gráficos de volume diário e saldos por moeda
+- Interface responsiva e adaptativa por país
+- Temas dinâmicos
+- Internacionalização completa
+
+---
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+
+- **Node.js** 22+
+- **pnpm** 9+
+
+### Instalação e Execução
+
+```bash
+# Clonar o repositório
+git clone https://github.com/perrout/financial-dashboard.git
+cd financial-dashboard
+
+# Instalar dependências
+pnpm install
+
+# Rodar em modo desenvolvimento
+pnpm dev
+
+# Build para produção
+pnpm build
+
+# Visualizar build de produção
+pnpm preview
 ```
+
+---
+
+## 🧪 Testes
+
+- Testes unitários para componentes, hooks e stores.
+- Cobertura de código com Vitest.
+
+```bash
+# Executar todos os testes
+pnpm test
+
+# Testes em modo watch
+pnpm test:watch
+
+# Gerar relatório de cobertura
+pnpm test:coverage
+```
+
+---
+
+## 📊 Qualidade e Convenções
+
+- **TypeScript Strict Mode** habilitado
+- **Biome** para lint e formatação
+- **Prettier** integrado
+- **100% Type Safety**
+- **Clean Code** e boas práticas
+
+---
+
+## 🎨 UI/UX
+
+- **Design System** baseado em Bootstrap 5 customizado
+- **Responsividade**: Mobile-first
+- **Acessibilidade**: ARIA labels e HTML semântico
+- **Performance**: Code splitting e lazy loading
+- **Internacionalização**: i18next
+
+---
+
+## 🚧 Roadmap / Próximos Passos
+
+- Integração com API real
+- Autenticação e autorização
+- Relatórios avançados
+- Notificações push
+- Testes E2E
+
+---
+
+## 🤝 Contribuição
+
+Contribuições são bem-vindas! Siga as convenções do projeto e abra um Pull Request.
+
+---
+
+Dúvidas? Sugestões? Abra uma issue!
