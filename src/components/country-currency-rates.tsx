@@ -1,5 +1,5 @@
-import { MOCK_RATES } from "../mocks"
-import { useAppStore } from "../store/app-store"
+import { MOCK_RATES } from "@/mocks"
+import { useAppStore } from "@/store/app-store"
 
 export default function CountryCurrencyRates() {
   const { selectedCountry } = useAppStore()

@@ -1,7 +1,7 @@
 import { Container, Nav, Navbar } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
-import CountrySelector from "../components/country-selector"
-import LanguageSelector from "../components/language-selector"
+import CountrySelector from "@/components/country-selector"
+import LanguageSelector from "@/components/language-selector"
 
 interface DashboardLayoutProps {
   children: React.ReactNode

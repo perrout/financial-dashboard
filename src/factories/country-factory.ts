@@ -1,5 +1,5 @@
-import { Country } from "../models/country"
-import { CurrencyFactory } from "./currency-factory"
+import { Country } from "@/models/country"
+import { CurrencyFactory } from "@/factories/currency-factory"
 
 export interface CountryData {
   code: string

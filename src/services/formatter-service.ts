@@ -1,5 +1,5 @@
-import type { Currency } from "../models/currency"
-import type { Country } from "../models/country"
+import type { Currency } from "@/models/currency"
+import type { Country } from "@/models/country"
 import { format, parseISO, isValid } from "date-fns"
 
 export interface CurrencyFormatter {
@@ -185,6 +185,19 @@ export class FormatterService {
     })
 
     return formatter.format(value / 100)
+  }
+
+  formatDateForInput(date: Date | string): string {
+    let d: Date
+    if (typeof date === "string") {
+      d = parseISO(date)
+    } else {
+      d = date
+    }
+    if (!isValid(d)) {
+      throw new Error(`Data inválida para input: ${date}`)
+    }
+    return format(d, "yyyy-MM-dd")
   }
 
   private getLocale(country: Country): string {

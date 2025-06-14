@@ -1,4 +1,4 @@
-import { Currency } from "../models/currency"
+import { Currency } from "@/models/currency"
 
 export interface CurrencyData {
   code: string

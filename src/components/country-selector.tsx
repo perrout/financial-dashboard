@@ -1,7 +1,7 @@
 import { Dropdown } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
-import type { Country } from "../models/country"
-import { useAppStore } from "../store/app-store"
+import type { Country } from "@/models/country"
+import { useAppStore } from "@/store/app-store"
 
 interface CountrySelectorProps {
   variant?: "primary" | "outline-primary" | "light"

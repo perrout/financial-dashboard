@@ -4,9 +4,9 @@ import type {
   CountryBalance,
   DailyTransactionSummary,
   Transaction,
-} from "../models/transaction"
-import { TransactionService } from "../services/transaction-service"
-import type { Country } from "../models/country"
+} from "@/models/transaction"
+import { TransactionService } from "@/services/transaction-service"
+import type { Country } from "@/models/country"
 
 interface TransactionState {
   // State

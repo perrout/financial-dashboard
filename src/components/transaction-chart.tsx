@@ -12,11 +12,10 @@ import { useMemo } from "react"
 import { Alert, Spinner } from "react-bootstrap"
 import { Bar } from "react-chartjs-2"
 import { useTranslation } from "react-i18next"
-import { useAppStore } from "../store/app-store"
+import { useAppStore } from "@/store/app-store"
+import type { DailyTransactionSummary } from "@/services/transaction-service"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
-
-import type { DailyTransactionSummary } from "../services/transaction-service"
 
 interface TransactionChartProps {
   height?: number

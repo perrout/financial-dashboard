@@ -1,5 +1,6 @@
-import type { Country } from "./country"
-import type { Currency } from "./currency"
+import type { Country } from "@/models/country"
+import type { Currency } from "@/models/currency"
+
 export interface CountryBalance {
   country: Country
   balances: CurrencyBalance[]

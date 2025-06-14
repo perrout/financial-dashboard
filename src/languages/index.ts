@@ -1,9 +1,9 @@
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 
-import ptTranslation from "./locales/pt.json"
-import esTranslation from "./locales/es.json"
-import enTranslation from "./locales/en.json"
+import ptTranslation from "@/languages/locales/pt.json"
+import esTranslation from "@/languages/locales/es.json"
+import enTranslation from "@/languages/locales/en.json"
 
 const resources = {
   pt: {

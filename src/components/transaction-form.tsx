@@ -1,8 +1,8 @@
 import { useCallback, useState, useEffect } from "react"
 import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
-import { useAppStore } from "../store/app-store"
-import type { Transaction } from "../models/transaction"
+import { useAppStore } from "@/store/app-store"
+import type { Transaction } from "@/models/transaction"
 
 export interface FormData {
   description: string
@@ -50,7 +50,7 @@ export default function TransactionForm({
     description: "",
     amount: "",
     currency: selectedCountry.primaryCurrency.code,
-    date: formatterService.formatDate(new Date(), selectedCountry),
+    date: formatterService.formatDateForInput(new Date()),
   }
 
   const [formData, setFormData] = useState<FormData>(emptyFormData)
@@ -61,7 +61,7 @@ export default function TransactionForm({
       description: "",
       amount: "",
       currency: selectedCountry.primaryCurrency.code,
-      date: formatterService.formatDate(new Date(), selectedCountry),
+      date: formatterService.formatDateForInput(new Date()),
     })
     setErrors({})
   }, [selectedCountry, formatterService])
@@ -75,13 +75,13 @@ export default function TransactionForm({
           typeof transaction.currency === "string"
             ? transaction.currency
             : transaction.currency.code,
-        date: formatterService.formatDate(transaction.date, selectedCountry),
+        date: formatterService.formatDateForInput(transaction.date),
       })
     } else {
       clearFormData()
     }
     setErrors({})
-  }, [transaction, clearFormData, formatterService, selectedCountry])
+  }, [transaction, clearFormData, formatterService])
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {}
@@ -288,8 +288,11 @@ export default function TransactionForm({
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label>{t("transaction.country")}</Form.Label>
+            <Form.Label htmlFor="country">
+              {t("transaction.country")}
+            </Form.Label>
             <Form.Control
+              id="country"
               type="text"
               value={`${selectedCountry.flag} ${selectedCountry.name}`}
               disabled

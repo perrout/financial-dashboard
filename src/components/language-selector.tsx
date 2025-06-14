@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Dropdown } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
-import { type SupportedLanguage, useAppStore } from "../store/app-store"
+import { type SupportedLanguage, useAppStore } from "@/store/app-store"
 
 interface LanguageSelectorProps {
   variant?: "primary" | "outline-primary" | "light" | "link"

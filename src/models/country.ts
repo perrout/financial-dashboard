@@ -1,4 +1,4 @@
-import type { Currency } from "./currency"
+import type { Currency } from "@/models/currency"
 
 export interface CountryProps {
   code: string

@@ -1,7 +1,7 @@
 import { Alert, Button, Spinner, Table } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
-import type { Transaction } from "../models/transaction"
-import { useAppStore } from "../store/app-store"
+import type { Transaction } from "@/models/transaction"
+import { useAppStore } from "@/store/app-store"
 
 interface TransactionListProps {
   transactions: Transaction[]

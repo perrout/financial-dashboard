@@ -1,4 +1,4 @@
-import { useAppStore } from "../store/app-store"
+import { useAppStore } from "@/store/app-store"
 
 export default function CountryCurrencies() {
   const { selectedCountry } = useAppStore()

@@ -1,8 +1,8 @@
 import { create } from "zustand"
 import { devtools, persist } from "zustand/middleware"
-import { type CountryCode, CountryFactory } from "../factories/country-factory"
-import type { Country } from "../models/country"
-import { FormatterService } from "../services/formatter-service"
+import { type CountryCode, CountryFactory } from "@/factories/country-factory"
+import type { Country } from "@/models/country"
+import { FormatterService } from "@/services/formatter-service"
 
 const LANGUAGE_OPTIONS = [
   {

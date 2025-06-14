@@ -1,9 +1,9 @@
 // Mock simples de API externa para transações
-import type { Transaction } from "../models/transaction"
+import type { Transaction } from "@/models/transaction"
 import {
   TransactionFactory,
   type CreateTransactionData,
-} from "../factories/transaction-factory"
+} from "@/factories/transaction-factory"
 
 function delay(ms = 400) {
   return new Promise(resolve => setTimeout(resolve, ms))

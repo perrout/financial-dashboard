@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
 import { Alert } from "react-bootstrap"
 import { Spinner } from "react-bootstrap"
-import type { CountryBalance as CountryBalanceType } from "../services/transaction-service"
-import { useAppStore } from "../store/app-store"
+import type { CountryBalance as CountryBalanceType } from "@/services/transaction-service"
+import { useAppStore } from "@/store/app-store"
 
 interface CountryBalanceComponentProps {
   countryBalance: CountryBalanceType | null

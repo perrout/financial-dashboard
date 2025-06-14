@@ -1,6 +1,6 @@
-import type { Country } from "../models/country"
-import { Transaction } from "../models/transaction"
-import { FormatterService } from "../services/formatter-service"
+import type { Country } from "@/models/country"
+import { Transaction } from "@/models/transaction"
+import { FormatterService } from "@/services/formatter-service"
 import { CountryFactory, type CountryCode } from "./country-factory"
 import { CurrencyFactory } from "./currency-factory"
 

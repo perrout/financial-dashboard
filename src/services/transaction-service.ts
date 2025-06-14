@@ -1,9 +1,8 @@
-import type { Transaction } from "../models/transaction"
-import type { Country } from "../models/country"
-import type { Currency } from "../models/currency"
-import { format } from "date-fns"
-import { MockTransactionApi } from "../mocks/mock-transaction-api"
-import { FormatterService } from "./formatter-service"
+import type { Transaction } from "@/models/transaction"
+import type { Country } from "@/models/country"
+import type { Currency } from "@/models/currency"
+import { MockTransactionApi } from "@/mocks/mock-transaction-api"
+import { FormatterService } from "@/services/formatter-service"
 
 export interface DailyTransactionSummary {
   date: string

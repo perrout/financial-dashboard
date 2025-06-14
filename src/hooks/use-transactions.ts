@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from "react"
-import type { Transaction } from "../models/transaction"
+import { useState, useEffect, useCallback } from "react"
+import type { Transaction } from "@/models/transaction"
 import type {
   DailyTransactionSummary,
   CountryBalance,
   TransactionService,
-} from "../services/transaction-service"
-import { useTransactionStore } from "../store/transaction-store"
-import { useAppStore } from "../store/app-store"
-import type { FormatterService } from "../services/formatter-service"
+} from "@/services/transaction-service"
+import { useTransactionStore } from "@/store/transaction-store"
+import { useAppStore } from "@/store/app-store"
+import type { FormatterService } from "@/services/formatter-service"
 
 export interface UseTransactionsResult {
   // State
@@ -61,6 +61,7 @@ export const useTransactions = (): UseTransactionsResult => {
     fetchTransactions,
     clearError,
     transactionService,
+    getTransactionsByCountry,
   } = useTransactionStore()
 
   const [dailySummary, setDailySummary] = useState<
@@ -147,7 +148,7 @@ export const useTransactions = (): UseTransactionsResult => {
 
   return {
     // State
-    transactions,
+    transactions: getTransactionsByCountry(selectedCountry.code),
     loading: storeLoading || summaryLoading,
     error,
 
