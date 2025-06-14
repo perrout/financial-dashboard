@@ -1,5 +1,7 @@
 # 💰 Financial - Dashboard
 
+[🔗 **Acesse a demonstração online**](https://perrout.github.io/financial-dashboard/)
+
 Dashboard financeiro moderno, responsivo e multi-país, desenvolvido com **React 19**, **TypeScript** e **Vite**. Estruturado com Clean Architecture, foco em escalabilidade, qualidade e experiência do usuário.
 
 ---
