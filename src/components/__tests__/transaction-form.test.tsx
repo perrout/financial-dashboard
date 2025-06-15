@@ -7,6 +7,7 @@ import { CountryFactory } from "@/factories/country-factory"
 import { useTransactions } from "@/hooks/use-transactions"
 import { FormatterService } from "@/services/formatter-service"
 import { TransactionService } from "@/services/transaction-service"
+import { act } from "react"
 
 // Mock the hooks
 vi.mock("@/hooks/use-transactions")
@@ -109,14 +110,13 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Fill form
-      await user.type(screen.getByLabelText(/Descrição/), "Test transaction")
-      await user.clear(screen.getByLabelText(/Valor/))
-      await user.type(screen.getByLabelText(/Valor/), "100.5")
-      await user.selectOptions(screen.getByLabelText(/Moeda/), "BRL")
-
-      // Submit form
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
+      await act(async () => {
+        await user.type(screen.getByLabelText(/Descrição/), "Test transaction")
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.type(screen.getByLabelText(/Valor/), "100.5")
+        await user.selectOptions(screen.getByLabelText(/Moeda/), "BRL")
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
       await waitFor(() => {
         expect(mockTransactionsHook.createTransaction).toHaveBeenCalledWith({
@@ -136,12 +136,11 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Fill required fields
-      await user.clear(screen.getByLabelText(/Valor/))
-      await user.type(screen.getByLabelText(/Valor/), "100")
-
-      // Submit form
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
+      await act(async () => {
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.type(screen.getByLabelText(/Valor/), "100")
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
       await waitFor(() => {
         expect(mockTransactionsHook.createTransaction).toHaveBeenCalled()
@@ -155,11 +154,10 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Clear amount field (required)
-      await user.clear(screen.getByLabelText(/Valor/))
-
-      // Submit form
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
+      await act(async () => {
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
       // Should not call createTransaction due to HTML5 validation
       await waitFor(
@@ -174,12 +172,11 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Fill required fields
-      await user.clear(screen.getByLabelText(/Valor/))
-      await user.type(screen.getByLabelText(/Valor/), "-100")
-
-      // Submit form
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
+      await act(async () => {
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.type(screen.getByLabelText(/Valor/), "-100")
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
       // Should not call createTransaction due to HTML5 validation
       await waitFor(
@@ -194,14 +191,13 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Fill required fields
-      await user.clear(screen.getByLabelText(/Valor/))
-      await user.type(screen.getByLabelText(/Valor/), "100")
-      await user.selectOptions(screen.getByLabelText(/Moeda/), "BRL")
-      await user.clear(screen.getByLabelText(/Data/))
-
-      // Submit form
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
+      await act(async () => {
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.type(screen.getByLabelText(/Valor/), "100")
+        await user.selectOptions(screen.getByLabelText(/Moeda/), "BRL")
+        await user.clear(screen.getByLabelText(/Data/))
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
       // Should not call createTransaction due to HTML5 validation
       await waitFor(
@@ -216,15 +212,14 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Fill required fields
-      await user.clear(screen.getByLabelText(/Valor/))
-      await user.type(screen.getByLabelText(/Valor/), "100")
-      await user.selectOptions(screen.getByLabelText(/Moeda/), "")
+      await act(async () => {
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.type(screen.getByLabelText(/Valor/), "100")
+        await user.selectOptions(screen.getByLabelText(/Moeda/), "")
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
-      // Submit form
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
-
-      // Should not call createTransaction due to HTML5 validation
+      // Should not call createTransaction due to required validation
       await waitFor(
         () => {
           expect(mockTransactionsHook.createTransaction).not.toHaveBeenCalled()
@@ -267,8 +262,9 @@ describe("TransactionForm", () => {
 
       render(<TransactionForm {...defaultProps} />)
 
-      // Modify form
-      await user.type(screen.getByLabelText(/Valor/), "100.5")
+      await act(async () => {
+        await user.type(screen.getByLabelText(/Valor/), "100.5")
+      })
 
       expect(mockTransactionsHook.clearError).toHaveBeenCalled()
     })
@@ -279,7 +275,9 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      await user.click(screen.getByRole("button", { name: "Cancelar" }))
+      await act(async () => {
+        await user.click(screen.getByRole("button", { name: "Cancelar" }))
+      })
 
       expect(mockOnCancel).toHaveBeenCalled()
     })
@@ -298,9 +296,10 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Clear amount and submit - this should trigger form validation
-      await user.clear(screen.getByLabelText(/Valor/))
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
+      await act(async () => {
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
       // The form validation should prevent submission
       await waitFor(
@@ -326,13 +325,12 @@ describe("TransactionForm", () => {
       const user = userEvent.setup()
       render(<TransactionForm {...defaultProps} />)
 
-      // Clear currency selection
-      await user.selectOptions(screen.getByLabelText(/Moeda/), "")
-
-      // Fill amount and submit
-      await user.clear(screen.getByLabelText(/Valor/))
-      await user.type(screen.getByLabelText(/Valor/), "100")
-      await user.click(screen.getByRole("button", { name: "Salvar" }))
+      await act(async () => {
+        await user.selectOptions(screen.getByLabelText(/Moeda/), "")
+        await user.clear(screen.getByLabelText(/Valor/))
+        await user.type(screen.getByLabelText(/Valor/), "100")
+        await user.click(screen.getByRole("button", { name: "Salvar" }))
+      })
 
       // Should not call createTransaction due to required validation
       await waitFor(
